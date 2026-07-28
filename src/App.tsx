@@ -3,7 +3,6 @@ import { motion, useReducedMotion, useScroll, useSpring } from "framer-motion";
 import {
   ArrowUpRight,
   BellRing,
-  CalendarDays,
   Check,
   CheckCircle2,
   Clock3,
@@ -17,11 +16,10 @@ import {
   Users,
   X
 } from "lucide-react";
-import "./App.css";
+import "./landing.css";
 
 const TELEGRAM_URL = "https://t.me/iiumtaweprobot";
 const GITHUB_URL = "https://github.com/Rewsyaydee/taweprolanding";
-const ASSET_BASE = import.meta.env.BASE_URL;
 
 const reveal = {
   hidden: { opacity: 0, y: 32 },
@@ -62,7 +60,7 @@ function App() {
 
       <header className="lr-nav">
         <a className="lr-brand" href="#top" aria-label="IIUMTawePro home">
-          <span className="lr-brand-mark"><img src="https://raw.githubusercontent.com/Rewsyaydee/IIUMTawePro/main/public/assets/iium-logo.png" alt="" /></span>
+          <span className="lr-brand-mark"><img src="/assets/iium-logo.png" alt="" /></span>
           <span>
             <strong>IIUMTawePro</strong>
             <small>Your first week, clearly mapped.</small>
@@ -277,7 +275,7 @@ function App() {
           </motion.div>
 
           <motion.div className="lr-campus-frame" variants={reveal} initial="hidden" whileInView="visible" viewport={viewport} transition={transition}>
-            <img src="https://raw.githubusercontent.com/Rewsyaydee/IIUMTawePro/main/public/assets/maps/campus-overview.webp" alt="Illustrated overview map of the IIUM campus" loading="lazy" />
+            <img src="/assets/maps/campus-overview.webp" alt="Illustrated overview map of the IIUM campus" loading="lazy" />
             <div className="lr-campus-shade" />
             <svg viewBox="0 0 1000 610" className="lr-campus-route" aria-hidden="true">
               <motion.path
@@ -417,7 +415,7 @@ function App() {
 
       <footer className="lr-footer">
         <a className="lr-brand" href="#top">
-          <span className="lr-brand-mark"><img src="https://raw.githubusercontent.com/Rewsyaydee/IIUMTawePro/main/public/assets/iium-logo.png" alt="" /></span>
+          <span className="lr-brand-mark"><img src="/assets/iium-logo.png" alt="" /></span>
           <span><strong>IIUMTawePro</strong><small>Garden of Knowledge and Virtue</small></span>
         </a>
         <p>An independent Telegram-native companion created for the IIUM student journey.</p>
