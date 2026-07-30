@@ -1,429 +1,470 @@
-import { useEffect, useState } from "react";
-import { motion, useReducedMotion, useScroll, useSpring } from "framer-motion";
+import { useEffect, useMemo, useState } from "react";
 import {
-  ArrowUpRight,
+  motion,
+  useMotionValueEvent,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "framer-motion";
+import {
+  ArrowDown,
+  ArrowRight,
   BellRing,
+  Building2,
+  CalendarRange,
   Check,
-  CheckCircle2,
-  Clock3,
+  ChevronDown,
+  CircleDollarSign,
+  Cloud,
+  Code2,
+  Database,
+  ExternalLink,
+  Gauge,
+  GraduationCap,
   HeartHandshake,
-  MapPin,
+  LocateFixed,
+  LockKeyhole,
+  MapPinned,
   Menu,
+  MessageCircleMore,
   Navigation,
+  Play,
   Radio,
+  Rocket,
+  Route,
   Send,
+  Server,
   ShieldCheck,
+  Smartphone,
+  Sparkles,
+  Timer,
   Users,
-  X
+  WifiOff,
+  X,
+  Zap,
 } from "lucide-react";
 import "./landing.css";
 
 const TELEGRAM_URL = "https://t.me/iiumtaweprobot";
-const GITHUB_URL = "https://github.com/Rewsyaydee/taweprolanding";
+const APP_URL = "https://iium-tawe-pro.vercel.app";
 
+const ease = [0.22, 1, 0.36, 1] as const;
 const reveal = {
-  hidden: { opacity: 0, y: 32 },
-  visible: { opacity: 1, y: 0 }
+  hidden: { opacity: 0, y: 42 },
+  visible: { opacity: 1, y: 0 },
 };
 
-function RouteMark({ label, active = false }: { label: string; active?: boolean }) {
+const reviews = [
+  ["Senang kerja kita man, tolak satu jobscope 🖐🏽... sorry do syedi demand macam2 😅 sebab gempak wehhh", "Aliya Maisarah Tawe", "Efficiency & quality"],
+  ["STYLEEE GILAAA WEIHHHH! I is amazeeeeddddd! AKU DAA EXCITED DARI TADI", "Ilyanie Tawe", "The wow factor"],
+  ["OKEH BAPAK STYLEEEEEEEEEEE 😂", "Ilyanie Tawe", "Design & UI"],
+  ["GEMPAK GILA SYEDI. WOW. Style do budak KICT 😝", "Tuah Cameraman Tawe", "Overall excellence"],
+  ["Ushhh, mantap do syedi 😆👍🏼👍🏼", "Muih Welwel Tawe", "Short & impactful"],
+  ["Waaaaa hebat gilaaa", "Iman Tawe", "Pure excitement"],
+  ["Hebat la syedii", "Nik Irdhina Syahira", "Impressive tech"],
+  ["FAKKK, STYLE GILA WEI", "Haziq Catering", "Mind-blowing design"],
+  ["Perghhh, Niceee doo. Ni kau buat kee", "Eggy Careg", "Genuine amazement"],
+  ["wahwahwah, ok hebat menarik", "Nurin Welwel Tawe", "Clean functionality"],
+  ["Weah syedii sgt membantu wei 🥹🥹🥹 Dia cam tersusun gak skit kerja ii", "Arep PC Tawe", "Organization & practicality"],
+];
+
+const roles = [
+  { tag: "01", title: "Students", copy: "Navigate the week, find every session, verify attendance and get help without leaving Telegram.", icon: Navigation, color: "cyan" },
+  { tag: "02", title: "Committee", copy: "Manage assigned work, submit evidence and keep field operations moving in real time.", icon: Users, color: "gold" },
+  { tag: "03", title: "Bureau Heads", copy: "See readiness, coordinate people and issue alerts before small problems become large ones.", icon: Gauge, color: "coral" },
+  { tag: "04", title: "Mainboard", copy: "Control users, broadcasts and the complete operational picture from one command layer.", icon: ShieldCheck, color: "lime" },
+];
+
+const bureaus = [
+  "Catering",
+  "Special Task",
+  "Preparation & Technical",
+  "Welcoming & Welfare",
+  "Multimedia",
+  "Programme Coordinator",
+  "Registration",
+  "Discipline & Ibadah",
+];
+
+const stack = [
+  { icon: Code2, label: "EXPERIENCE", title: "React 18 + TypeScript", copy: "Vite-powered interface with high-performance, component-led delivery." },
+  { icon: Database, label: "DATA", title: "Supabase PostgreSQL", copy: "Row Level Security protects role-specific data at the database boundary." },
+  { icon: Cloud, label: "DELIVERY", title: "Vercel Serverless", copy: "18 API actions distributed through production-ready serverless infrastructure." },
+  { icon: LockKeyhole, label: "IDENTITY", title: "Telegram + JWT", copy: "initData validation, Supabase JWT and offline service-worker caching." },
+];
+
+function SceneHeading({ eyebrow, title, accent, body, center = false }: {
+  eyebrow: string; title: string; accent?: string; body?: string; center?: boolean;
+}) {
+  const reduce = useReducedMotion();
   return (
-    <span className={`lr-route-mark${active ? " is-active" : ""}`}>
-      <span className="lr-route-dot" />
-      {label}
-    </span>
+    <motion.div
+      className={`scene-heading${center ? " center" : ""}`}
+      variants={reveal}
+      initial={reduce ? false : "hidden"}
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.85, ease }}
+    >
+      <span className="eyebrow"><i />{eyebrow}</span>
+      <h2>{title}{accent && <em>{accent}</em>}</h2>
+      {body && <p>{body}</p>}
+    </motion.div>
+  );
+}
+
+function PhoneVisual({ src, alt, className = "" }: { src: string; alt: string; className?: string }) {
+  return (
+    <div className={`phone-visual ${className}`}>
+      <span className="phone-glow" />
+      <img src={src} alt={alt} loading="lazy" />
+    </div>
+  );
+}
+
+function Metric({ value, label, detail }: { value: string; label: string; detail?: string }) {
+  return (
+    <motion.div className="metric" variants={reveal}>
+      <strong>{value}</strong>
+      <span>{label}</span>
+      {detail && <small>{detail}</small>}
+    </motion.div>
   );
 }
 
 function App() {
-  const [menuOpen, setMenuOpen] = useState(false);
   const reduceMotion = useReducedMotion();
+  const [menu, setMenu] = useState(false);
+  const [activeRole, setActiveRole] = useState(0);
+  const [scrollPercent, setScrollPercent] = useState(0);
   const { scrollYProgress } = useScroll();
-  const routeProgress = useSpring(scrollYProgress, { stiffness: 90, damping: 28, mass: 0.25 });
+  const smoothProgress = useSpring(scrollYProgress, { stiffness: 90, damping: 25, mass: 0.25 });
+  const heroY = useTransform(scrollYProgress, [0, 0.12], [0, reduceMotion ? 0 : 180]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.09], [1, 0]);
+  const reviewsLoop = useMemo(() => [...reviews, ...reviews], []);
+
+  useMotionValueEvent(scrollYProgress, "change", (value) => setScrollPercent(Math.round(value * 100)));
 
   useEffect(() => {
-    document.documentElement.classList.add("landing-page-active");
-    return () => document.documentElement.classList.remove("landing-page-active");
+    document.documentElement.classList.add("pitch-active");
+    return () => document.documentElement.classList.remove("pitch-active");
   }, []);
 
-  const transition = reduceMotion ? { duration: 0 } : { duration: 0.8, ease: [0.22, 1, 0.36, 1] as const };
-  const viewport = { once: true, amount: 0.2 };
-
   return (
-    <div className="lr-site">
-      <a className="lr-skip" href="#main">Skip to content</a>
+    <div className="pitch">
+      <a className="skip-link" href="#content">Skip to presentation</a>
 
-      <motion.div className="lr-scroll-route" aria-hidden="true">
-        <span className="lr-scroll-track" />
-        <motion.span className="lr-scroll-fill" style={{ scaleY: routeProgress }} />
-      </motion.div>
+      <motion.div className="progress-line" style={{ scaleX: smoothProgress }} />
+      <div className="progress-count" aria-hidden="true">{String(scrollPercent).padStart(2, "0")}%</div>
 
-      <header className="lr-nav">
-        <a className="lr-brand" href="#top" aria-label="IIUMTawePro home">
-          <span className="lr-brand-mark"><img src="/assets/iium-logo.png" alt="" /></span>
-          <span>
-            <strong>IIUMTawePro</strong>
-            <small>Your first week, clearly mapped.</small>
-          </span>
+      <header className="deck-nav">
+        <a href="#top" className="brand" aria-label="TawePro home">
+          <span className="brand-orbit"><img src="/assets/iium-logo.png" alt="" /></span>
+          <span><b>TawePro</b><small>Ta’aruf Week, reimagined</small></span>
         </a>
-
-        <nav className="lr-nav-links" aria-label="Landing page">
-          <a href="#journey">Journey</a>
-          <a href="#navigate">Navigate</a>
-          <a href="#operations">Operations</a>
+        <nav aria-label="Pitch deck navigation">
+          <a href="#problem">Problem</a>
+          <a href="#solution">Solution</a>
+          <a href="#proof">Proof</a>
+          <a href="#reviews">Voices</a>
         </nav>
-
-        <a className="lr-nav-cta" href={TELEGRAM_URL} target="_blank" rel="noreferrer">
-          Open in Telegram <ArrowUpRight size={15} />
+        <a className="nav-cta" href={TELEGRAM_URL} target="_blank" rel="noreferrer">
+          Launch app <ExternalLink size={14} />
         </a>
-
-        <button
-          className="lr-menu-button"
-          type="button"
-          aria-label={menuOpen ? "Close menu" : "Open menu"}
-          aria-expanded={menuOpen}
-          onClick={() => setMenuOpen((value) => !value)}
-        >
-          {menuOpen ? <X size={21} /> : <Menu size={21} />}
+        <button className="menu-btn" aria-label={menu ? "Close navigation" : "Open navigation"} aria-expanded={menu} onClick={() => setMenu(!menu)}>
+          {menu ? <X /> : <Menu />}
         </button>
-
-        {menuOpen && (
-          <div className="lr-mobile-menu">
-            <a href="#journey" onClick={() => setMenuOpen(false)}>Journey</a>
-            <a href="#navigate" onClick={() => setMenuOpen(false)}>Navigate</a>
-            <a href="#operations" onClick={() => setMenuOpen(false)}>Operations</a>
-            <a href={TELEGRAM_URL} target="_blank" rel="noreferrer">Open in Telegram</a>
+        {menu && (
+          <div className="mobile-nav">
+            {["problem", "solution", "proof", "reviews"].map((id) => <a key={id} href={`#${id}`} onClick={() => setMenu(false)}>{id}</a>)}
+            <a href={TELEGRAM_URL} target="_blank" rel="noreferrer">Launch app</a>
           </div>
         )}
       </header>
 
-      <main id="main">
-        <section className="lr-hero" id="top">
-          <div className="lr-hero-grid" aria-hidden="true" />
-          <div className="lr-topography lr-topography-one" aria-hidden="true" />
-          <div className="lr-topography lr-topography-two" aria-hidden="true" />
+      <main id="content">
+        <section className="hero scene" id="top">
+          <div className="noise" />
+          <div className="hero-grid" />
+          <motion.div className="hero-orb orb-one" animate={reduceMotion ? {} : { x: [0, 42, 0], y: [0, -30, 0] }} transition={{ duration: 12, repeat: Infinity }} />
+          <motion.div className="hero-orb orb-two" animate={reduceMotion ? {} : { x: [0, -35, 0], y: [0, 45, 0] }} transition={{ duration: 15, repeat: Infinity }} />
 
-          <div className="lr-hero-copy">
-            <motion.div
-              className="lr-kicker"
-              initial={reduceMotion ? false : { opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ ...transition, delay: 0.1 }}
-            >
-              <span className="lr-live-pulse" /> Telegram-native orientation
+          <motion.div className="hero-inner" style={{ y: heroY, opacity: heroOpacity }}>
+            <motion.div className="hero-kicker" initial={reduceMotion ? false : { opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
+              <Radio size={15} /> A production-ready Telegram Mini App
             </motion.div>
-
-            <motion.h1
-              initial={reduceMotion ? false : { opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ ...transition, delay: 0.18 }}
-            >
-              Your first week
-              <span>at IIUM.</span>
-              <em>One clear way through it.</em>
+            <motion.h1 initial={reduceMotion ? false : { opacity: 0, y: 55 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.12, ease }}>
+              Ta’aruf Week
+              <span>Reimagined.</span>
             </motion.h1>
-
-            <motion.p
-              className="lr-hero-lede"
-              initial={reduceMotion ? false : { opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ ...transition, delay: 0.32 }}
-            >
-              Live schedules, campus routes, verified attendance, important updates and help—
-              thoughtfully connected inside Telegram.
+            <motion.p initial={reduceMotion ? false : { opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3, ease }}>
+              A zero-friction operating system transforming orientation for <strong>3,000+ students</strong> at IIUM.
             </motion.p>
-
-            <motion.div
-              className="lr-hero-actions"
-              initial={reduceMotion ? false : { opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ ...transition, delay: 0.42 }}
-            >
-              <a className="lr-button lr-button-primary" href={TELEGRAM_URL} target="_blank" rel="noreferrer">
-                <Send size={17} /> Open in Telegram <ArrowUpRight size={15} />
-              </a>
-              <a className="lr-button lr-button-ghost" href="#journey">
-                Follow the journey <span aria-hidden="true">↓</span>
-              </a>
+            <motion.div className="hero-actions" initial={reduceMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.55 }}>
+              <a className="button primary" href="#demo"><Play size={17} fill="currentColor" /> Enter the experience</a>
+              <a className="button ghost" href={TELEGRAM_URL} target="_blank" rel="noreferrer"><Send size={17} /> Open in Telegram</a>
             </motion.div>
+            <motion.div className="hero-foot" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>
+              <span>July 2026</span><i /><span>Built by students</span><i /><span>For the IIUM community</span>
+            </motion.div>
+          </motion.div>
 
-            <motion.p
-              className="lr-friction-note"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.7 }}
-            >
-              No new app. No separate sign-up. Just tap and go.
-            </motion.p>
-          </div>
-
-          <motion.div
-            className="lr-hero-map"
-            initial={reduceMotion ? false : { opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ ...transition, delay: 0.25 }}
-            aria-label="A live route from ICC Main Hall to SHAS Mosque"
-          >
-            <svg className="lr-route-svg" viewBox="0 0 720 720" role="img" aria-label="Animated campus route">
-              <defs>
-                <filter id="routeGlow">
-                  <feGaussianBlur stdDeviation="5" result="blur" />
-                  <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-                </filter>
-              </defs>
-              <path className="lr-contour" d="M-30 160C111 65 191 231 335 143s262-73 411 15" />
-              <path className="lr-contour" d="M-27 230C118 134 224 302 374 211s244-59 383 8" />
-              <path className="lr-contour" d="M-10 531C144 425 237 603 394 497s241-42 362 8" />
-              <path className="lr-route-shadow" d="M104 584C157 501 148 406 246 384c120-27 100-149 211-168 58-10 94-48 151-100" />
-              <motion.path
-                className="lr-route-path"
-                d="M104 584C157 501 148 406 246 384c120-27 100-149 211-168 58-10 94-48 151-100"
-                initial={reduceMotion ? false : { pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: reduceMotion ? 0 : 2.4, delay: 0.55, ease: "easeInOut" }}
-              />
-              <circle className="lr-map-point" cx="104" cy="584" r="10" />
-              <circle className="lr-map-ring" cx="608" cy="116" r="18" />
-              <circle className="lr-map-point lr-map-point-end" cx="608" cy="116" r="8" />
+          <motion.div className="hero-route" aria-hidden="true" initial={reduceMotion ? false : { pathLength: 0 }}>
+            <svg viewBox="0 0 1600 400">
+              <motion.path d="M-60 310C250 80 410 390 690 190S1110 70 1660 250" initial={reduceMotion ? false : { pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 3, delay: 0.5, ease }} />
             </svg>
-
-            <div className="lr-location lr-location-start">
-              <span>START</span><strong>ICC Main Hall</strong>
-            </div>
-            <div className="lr-location lr-location-end">
-              <span>NEXT</span><strong>SHAS Mosque</strong>
-            </div>
-            <div className="lr-now-card">
-              <div><Radio size={14} /><span>HAPPENING NOW</span></div>
-              <strong>Campus Discovery</strong>
-              <p><Clock3 size={14} /> 10:00 — 11:30</p>
-              <p><MapPin size={14} /> ICC Main Hall</p>
-            </div>
-            <div className="lr-distance">3 min · 280 m</div>
+            <span className="route-node n1" /><span className="route-node n2" /><span className="route-node n3" />
           </motion.div>
-
-          <div className="lr-hero-route-labels" aria-hidden="true">
-            <RouteMark label="Arrive" active />
-            <RouteMark label="Discover" />
-            <RouteMark label="Belong" />
-          </div>
+          <a className="scroll-cue" href="#demo"><span>Scroll to explore</span><ArrowDown size={18} /></a>
         </section>
 
-        <section className="lr-proof" aria-label="IIUMTawePro at a glance">
-          <motion.div variants={reveal} initial="hidden" whileInView="visible" viewport={viewport} transition={transition}>
-            <strong>2,000+</strong><span>new journeys supported</span>
-          </motion.div>
-          <motion.div variants={reveal} initial="hidden" whileInView="visible" viewport={viewport} transition={{ ...transition, delay: 0.08 }}>
-            <strong>53</strong><span>programme moments</span>
-          </motion.div>
-          <motion.div variants={reveal} initial="hidden" whileInView="visible" viewport={viewport} transition={{ ...transition, delay: 0.16 }}>
-            <strong>12</strong><span>campus destinations</span>
-          </motion.div>
-          <motion.p variants={reveal} initial="hidden" whileInView="visible" viewport={viewport} transition={{ ...transition, delay: 0.24 }}>
-            One calm source of truth for students and the people guiding them.
-          </motion.p>
-        </section>
-
-        <section className="lr-chapter lr-schedule-chapter" id="journey">
-          <div className="lr-chapter-copy">
-            <motion.span className="lr-chapter-number" variants={reveal} initial="hidden" whileInView="visible" viewport={viewport} transition={transition}>01 / THE WEEK WAKES UP</motion.span>
-            <motion.h2 variants={reveal} initial="hidden" whileInView="visible" viewport={viewport} transition={transition}>
-              Never wonder<br /><em>what comes next.</em>
-            </motion.h2>
-            <motion.p variants={reveal} initial="hidden" whileInView="visible" viewport={viewport} transition={transition}>
-              The programme changes with the moment. IIUMTawePro finds today, moves to what is
-              live, and keeps the next destination within reach.
-            </motion.p>
-            <motion.ul className="lr-clean-list" variants={reveal} initial="hidden" whileInView="visible" viewport={viewport} transition={transition}>
-              <li><Check size={15} /> Live, upcoming and completed states</li>
-              <li><Check size={15} /> Main and concurrent sessions</li>
-              <li><Check size={15} /> One-tap check-in and navigation</li>
-            </motion.ul>
-          </div>
-
-          <motion.div className="lr-time-stage" variants={reveal} initial="hidden" whileInView="visible" viewport={viewport} transition={transition}>
-            <div className="lr-time-rail">
-              <span>08:30</span><span>10:00</span><span className="is-now">NOW</span><span>14:30</span><span>17:00</span>
-            </div>
-            <article className="lr-event lr-event-past">
-              <div><span>08:30 — 10:00</span><small>COMPLETED</small></div>
-              <h3>Welcome &amp; Campus Briefing</h3>
-              <p><MapPin size={14} /> Main Auditorium</p>
-            </article>
-            <article className="lr-event lr-event-now">
-              <div><span>10:00 — 11:30</span><small><i /> HAPPENING NOW</small></div>
-              <h3>Campus Discovery</h3>
-              <p><MapPin size={14} /> ICC Main Hall</p>
-              <div className="lr-event-actions">
-                <button type="button">Check in <CheckCircle2 size={15} /></button>
-                <button type="button">Navigate <Navigation size={15} /></button>
-              </div>
-            </article>
-            <article className="lr-event lr-event-next">
-              <div><span>12:30 — 14:00</span><small>NEXT</small></div>
-              <h3>Prayer &amp; Self-Management</h3>
-              <p><MapPin size={14} /> SHAS Mosque</p>
-            </article>
-          </motion.div>
-        </section>
-
-        <section className="lr-map-chapter" id="navigate">
-          <motion.div className="lr-map-heading" variants={reveal} initial="hidden" whileInView="visible" viewport={viewport} transition={transition}>
-            <span className="lr-chapter-number">02 / THE CAMPUS OPENS</span>
-            <h2>From unfamiliar<br /><em>to unmistakable.</em></h2>
-            <p>Every venue change becomes a route with time, distance and landmarks—not another place to get lost.</p>
-          </motion.div>
-
-          <motion.div className="lr-campus-frame" variants={reveal} initial="hidden" whileInView="visible" viewport={viewport} transition={transition}>
-            <img src="/assets/maps/campus-overview.webp" alt="Illustrated overview map of the IIUM campus" loading="lazy" />
-            <div className="lr-campus-shade" />
-            <svg viewBox="0 0 1000 610" className="lr-campus-route" aria-hidden="true">
-              <motion.path
-                d="M180 430C300 350 356 448 454 329c105-127 204-41 367-174"
-                initial={reduceMotion ? false : { pathLength: 0 }}
-                whileInView={{ pathLength: 1 }}
-                viewport={{ once: true, amount: 0.5 }}
-                transition={{ duration: reduceMotion ? 0 : 2, ease: "easeInOut" }}
-              />
-            </svg>
-            <span className="lr-pin lr-pin-one"><i /> ICC Main Hall</span>
-            <span className="lr-pin lr-pin-two"><i /> SHAS Mosque</span>
-            <div className="lr-route-ticket">
-              <span>YOUR NEXT ROUTE</span>
-              <div><strong>ICC Main Hall</strong><ArrowUpRight size={18} /><strong>SHAS Mosque</strong></div>
-              <p>3 min walk <i /> 280 metres <i /> Indoor connector</p>
-              <a href={TELEGRAM_URL} target="_blank" rel="noreferrer">Start navigating <Navigation size={16} /></a>
-            </div>
-          </motion.div>
-        </section>
-
-        <section className="lr-chapter lr-attendance-chapter">
-          <motion.div className="lr-arrival-stage" variants={reveal} initial="hidden" whileInView="visible" viewport={viewport} transition={transition}>
-            <div className="lr-arrival-rings" aria-hidden="true"><i /><i /><i /></div>
-            <div className="lr-arrival-core">
-              <CheckCircle2 size={34} />
-              <span>LOCATION VERIFIED</span>
-              <strong>You made it.</strong>
-              <small>Within 200m of venue</small>
-            </div>
-            <div className="lr-stamp lr-stamp-one">01<br /><span>ARRIVED</span></div>
-            <div className="lr-stamp lr-stamp-two">02<br /><span>DISCOVERED</span></div>
-            <div className="lr-stamp lr-stamp-three">03<br /><span>BELONG</span></div>
-          </motion.div>
-
-          <div className="lr-chapter-copy">
-            <motion.span className="lr-chapter-number" variants={reveal} initial="hidden" whileInView="visible" viewport={viewport} transition={transition}>03 / ARRIVAL BECOMES PARTICIPATION</motion.span>
-            <motion.h2 variants={reveal} initial="hidden" whileInView="visible" viewport={viewport} transition={transition}>
-              Every arrival<br /><em>becomes part of your story.</em>
-            </motion.h2>
-            <motion.p variants={reveal} initial="hidden" whileInView="visible" viewport={viewport} transition={transition}>
-              GPS-verified attendance turns each destination into progress. Students see the
-              journey they have completed—not another form they had to fill.
-            </motion.p>
-            <motion.div className="lr-progress" variants={reveal} initial="hidden" whileInView="visible" viewport={viewport} transition={transition}>
-              <div><span>Ta’aruf journey</span><strong>5 / 8 moments</strong></div>
-              <i><span /></i>
-              <small>Three more arrivals to complete the route.</small>
+        <section className="demo scene" id="demo">
+          <SceneHeading eyebrow="01 — Experience the app" title="Not a concept." accent="A living product." body="A student’s entire orientation journey, running where they already are: inside Telegram." center />
+          <div className="demo-stage">
+            <motion.div className="demo-copy left" variants={reveal} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+              <span>HAPPENING NOW</span>
+              <h3>One calm source of truth.</h3>
+              <p>Schedule, destination, check-in and support move with the student—moment by moment.</p>
+            </motion.div>
+            <motion.div initial={reduceMotion ? false : { opacity: 0, scale: 0.8, rotate: -5 }} whileInView={{ opacity: 1, scale: 1, rotate: 0 }} viewport={{ once: true, amount: 0.25 }} transition={{ duration: 1.2, ease }}>
+              <PhoneVisual src="/assets/showcase/dashboard.png" alt="TawePro student dashboard shown inside a phone" className="hero-phone" />
+            </motion.div>
+            <motion.div className="demo-copy right" variants={reveal} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+              <span>ZERO FRICTION</span>
+              <h3>Tap. Arrive. Belong.</h3>
+              <p>No store search, installation, account form or forgotten password between arrival and action.</p>
             </motion.div>
           </div>
+          <div className="demo-labels"><span><Zap /> Instant entry</span><span><WifiOff /> Offline-aware</span><span><ShieldCheck /> Verified identity</span></div>
         </section>
 
-        <section className="lr-care-chapter">
-          <motion.div className="lr-care-intro" variants={reveal} initial="hidden" whileInView="visible" viewport={viewport} transition={transition}>
-            <span className="lr-chapter-number">04 / THE ROUTE ADAPTS</span>
-            <h2>When plans change,<br /><em>you are not left behind.</em></h2>
-          </motion.div>
+        <section className="problem scene" id="problem">
+          <div className="problem-number">50+</div>
+          <SceneHeading eyebrow="02 — Orientation without a compass" title="50+ sessions. 12 venues." accent="Zero coordination tools." body="The old system asks thousands of new students—and the teams serving them—to assemble the truth from fragments." />
+          <div className="pain-grid">
+            {[
+              [MapPinned, "Scattered campus", "ICC, mosque, clinics and halls—with no digital path between them."],
+              [BellRing, "Updates disappear", "Emergency changes are buried inside noisy Telegram channels."],
+              [Check, "Paper attendance", "Punch cards create queues, delays and an easy path to fraud."],
+              [Users, "Eight siloed bureaus", "No shared command layer for task ownership or live readiness."],
+            ].map(([Icon, title, copy], i) => {
+              const I = Icon as typeof MapPinned;
+              return (
+                <motion.article key={title as string} variants={reveal} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} transition={{ delay: i * 0.1, duration: 0.7, ease }}>
+                  <span className="pain-index">0{i + 1}</span><I /><h3>{title as string}</h3><p>{copy as string}</p>
+                </motion.article>
+              );
+            })}
+          </div>
+          <div className="problem-footer"><span>Confusion</span><ArrowRight /><span>Delay</span><ArrowRight /><span>Risk</span><ArrowRight /><strong>There had to be a better route.</strong></div>
+        </section>
 
-          <div className="lr-care-grid">
-            <motion.article className="lr-care-card lr-alert-card" variants={reveal} initial="hidden" whileInView="visible" viewport={viewport} transition={transition}>
-              <div className="lr-card-icon"><BellRing size={22} /></div>
-              <span>IMPORTANT UPDATE · JUST NOW</span>
-              <h3>Venue changed to Main Auditorium</h3>
-              <p>Your schedule and route update together, so the next step remains clear.</p>
-              <div className="lr-redirect">
-                <span className="is-old">ICC Main Hall</span><ArrowUpRight size={16} /><strong>Main Auditorium</strong>
-              </div>
+        <section className="origin scene">
+          <div className="origin-sticky">
+            <SceneHeading eyebrow="03 — The origin" title="Why a Telegram" accent="Mini App?" body="The dream was to digitise Ta’aruf Week. The first obstacle was not technology—it was access." />
+          </div>
+          <div className="origin-story">
+            <motion.article variants={reveal} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+              <span className="story-step">01 / THE BARRIER</span>
+              <CircleDollarSign />
+              <h3>RM500 before the first student.</h3>
+              <p>App Store and Play Store deployment fees create a needless barrier for a student-built community tool.</p>
             </motion.article>
-
-            <motion.article className="lr-care-card lr-help-card" variants={reveal} initial="hidden" whileInView="visible" viewport={viewport} transition={{ ...transition, delay: 0.1 }}>
-              <div className="lr-card-icon"><HeartHandshake size={22} /></div>
-              <span>HELP IS PART OF THE ROUTE</span>
-              <h3>A quiet way to ask for support.</h3>
-              <p>Wellbeing reports and emergency contacts stay close without overwhelming the journey.</p>
-              <a href={TELEGRAM_URL} target="_blank" rel="noreferrer">Find support <ArrowUpRight size={15} /></a>
+            <motion.article variants={reveal} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+              <span className="story-step">02 / THE PIVOT</span>
+              <MessageCircleMore />
+              <h3>The super app was already installed.</h3>
+              <p>Telegram already held the audience, identity and daily communication layer. No forced download required.</p>
+            </motion.article>
+            <motion.article className="story-final" variants={reveal} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+              <span className="story-step">03 / THE REALITY</span>
+              <Rocket />
+              <h3>Passion became production.</h3>
+              <p>A student idea matured into a fast, secure and deployed operational platform.</p>
             </motion.article>
           </div>
         </section>
 
-        <section className="lr-operations" id="operations">
-          <motion.div className="lr-operations-copy" variants={reveal} initial="hidden" whileInView="visible" viewport={viewport} transition={transition}>
-            <span className="lr-chapter-number">05 / BEHIND EVERY CLEAR JOURNEY</span>
-            <h2>One student sees a route.<br /><em>A whole team keeps it clear.</em></h2>
-            <p>
-              Committee members, bureau heads and mainboard coordinate tasks, attendance,
-              readiness and urgent broadcasts through the same living system.
-            </p>
-          </motion.div>
-
-          <motion.div className="lr-ops-system" variants={reveal} initial="hidden" whileInView="visible" viewport={viewport} transition={transition}>
-            <svg viewBox="0 0 900 560" aria-hidden="true">
-              <path d="M450 280L178 118M450 280L722 118M450 280L150 410M450 280L750 410M450 280L450 66M450 280L450 500" />
-              <circle cx="450" cy="280" r="74" />
-              <circle cx="178" cy="118" r="42" />
-              <circle cx="722" cy="118" r="42" />
-              <circle cx="150" cy="410" r="42" />
-              <circle cx="750" cy="410" r="42" />
-              <circle cx="450" cy="66" r="35" />
-              <circle cx="450" cy="500" r="35" />
-            </svg>
-            <div className="lr-ops-core"><ShieldCheck size={28} /><strong>Mainboard</strong><span>clear overview</span></div>
-            <span className="lr-ops-node lr-node-one">Programme</span>
-            <span className="lr-ops-node lr-node-two">Welfare</span>
-            <span className="lr-ops-node lr-node-three">Catering</span>
-            <span className="lr-ops-node lr-node-four">Special Task</span>
-            <span className="lr-ops-node lr-node-five">Multimedia</span>
-            <span className="lr-ops-node lr-node-six">Discipline</span>
-          </motion.div>
-
-          <div className="lr-role-strip">
-            <span><Users size={18} /> Student</span>
-            <i />
-            <span>Committee</span>
-            <i />
-            <span>Head of Bureau</span>
-            <i />
-            <span><ShieldCheck size={18} /> Mainboard</span>
+        <section className="solution scene" id="solution">
+          <div className="solution-wash" />
+          <SceneHeading eyebrow="04 — The solution" title="No install. No sign-up." accent="No friction." body="Runs entirely inside Telegram—a direct path from announcement to action." center />
+          <div className="solution-layout">
+            <motion.div className="solution-feature one" variants={reveal} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+              <CalendarRange /><strong>53</strong><h3>Real events</h3><p>An interactive timeline understands past, now and next.</p>
+            </motion.div>
+            <motion.div initial={reduceMotion ? false : { opacity: 0, y: 80 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 1, ease }}>
+              <PhoneVisual src="/assets/showcase/schedule.png" alt="TawePro interactive event schedule" className="solution-phone" />
+            </motion.div>
+            <motion.div className="solution-feature two" variants={reveal} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+              <LocateFixed /><strong>200m</strong><h3>GPS verification</h3><p>Presence is confirmed at the venue—not on a paper card.</p>
+            </motion.div>
+            <motion.div className="solution-feature three" variants={reveal} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+              <BellRing /><strong>Live</strong><h3>Emergency broadcasts</h3><p>Critical changes reach the right people at the right moment.</p>
+            </motion.div>
           </div>
         </section>
 
-        <section className="lr-final">
-          <div className="lr-final-lines" aria-hidden="true">
-            <span /><span /><span /><span />
+        <section className="walkthrough scene">
+          <SceneHeading eyebrow="05 — Student walkthrough" title="From first arrival" accent="to the final ceremony." body="One continuous journey. Every screen knows what the student needs next." />
+          <div className="walk-track">
+            <motion.div className="walk-phone p1" initial={reduceMotion ? false : { opacity: 0, x: -100, rotate: -8 }} whileInView={{ opacity: 1, x: 0, rotate: -5 }} viewport={{ once: true }} transition={{ duration: 0.9, ease }}>
+              <PhoneVisual src="/assets/showcase/dashboard.png" alt="Student dashboard" />
+              <span><b>01</b> Open instantly</span>
+            </motion.div>
+            <motion.div className="walk-phone p2" initial={reduceMotion ? false : { opacity: 0, y: 120 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.9, delay: 0.1, ease }}>
+              <PhoneVisual src="/assets/showcase/map.png" alt="Campus route navigation" />
+              <span><b>02</b> Find the route</span>
+            </motion.div>
+            <motion.div className="walk-phone p3" initial={reduceMotion ? false : { opacity: 0, x: 100, rotate: 8 }} whileInView={{ opacity: 1, x: 0, rotate: 5 }} viewport={{ once: true }} transition={{ duration: 0.9, delay: 0.2, ease }}>
+              <PhoneVisual src="/assets/showcase/checkin.png" alt="GPS attendance and reward tracking" />
+              <span><b>03</b> Verify arrival</span>
+            </motion.div>
           </div>
-          <motion.div className="lr-final-content" variants={reveal} initial="hidden" whileInView="visible" viewport={viewport} transition={transition}>
-            <div className="lr-final-plane"><Send size={34} /></div>
-            <span className="lr-chapter-number">YOUR ROUTE IS READY</span>
-            <h2>Start where you already are.<br /><em>Inside Telegram.</em></h2>
-            <p>Your schedule, next destination, attendance, updates and help—one tap away.</p>
-            <a className="lr-button lr-button-primary lr-final-button" href={TELEGRAM_URL} target="_blank" rel="noreferrer">
-              <Send size={18} /> Open IIUMTawePro <ArrowUpRight size={16} />
-            </a>
-            <small>No download · No separate login · Built for every new beginning</small>
+          <div className="walk-route"><i /><i /><i /></div>
+        </section>
+
+        <section className="audiences scene">
+          <SceneHeading eyebrow="06 — Four views, one system" title="One platform serving" accent="four audiences." body="Each role sees a focused surface. Together, they create one reliable operational picture." />
+          <div className="role-shell">
+            <div className="role-tabs" role="tablist" aria-label="TawePro audiences">
+              {roles.map((role, i) => <button key={role.title} role="tab" aria-selected={activeRole === i} onClick={() => setActiveRole(i)}><span>{role.tag}</span>{role.title}</button>)}
+            </div>
+            <motion.div className={`role-detail ${roles[activeRole].color}`} key={activeRole} initial={reduceMotion ? false : { opacity: 0, x: 35 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.45, ease }}>
+              {(() => { const Icon = roles[activeRole].icon; return <Icon />; })()}
+              <span>{roles[activeRole].tag} / AUDIENCE</span>
+              <h3>{roles[activeRole].title}</h3>
+              <p>{roles[activeRole].copy}</p>
+              <div><Check /> Role-aware access <Check /> One shared truth</div>
+            </motion.div>
+          </div>
+        </section>
+
+        <section className="architecture scene">
+          <SceneHeading eyebrow="07 — Under the surface" title="Production-ready" accent="architecture." body="Enterprise-grade foundations, composed for performance, security and scale." center />
+          <div className="stack-grid">
+            {stack.map(({ icon: Icon, label, title, copy }, i) => (
+              <motion.article key={title} variants={reveal} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.09, duration: 0.7, ease }}>
+                <div><Icon /><span>{label}</span></div><h3>{title}</h3><p>{copy}</p><small>0{i + 1}</small>
+              </motion.article>
+            ))}
+          </div>
+          <div className="architecture-flow">
+            <span><Smartphone /> Telegram</span><i /><span><Code2 /> React</span><i /><span><Server /> API</span><i /><span><Database /> Supabase</span>
+          </div>
+        </section>
+
+        <section className="command scene">
+          <div className="command-copy">
+            <SceneHeading eyebrow="08 — Committee command center" title="Eight bureaus." accent="One pulse." body="Every operational team keeps its own focus while sharing the same live system." />
+            <div className="tool-count"><strong>19</strong><span>operational tools</span></div>
+          </div>
+          <motion.div className="bureau-orbit" initial={reduceMotion ? false : { opacity: 0, scale: 0.75 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 1, ease }}>
+            <div className="orbit-center"><img src="/assets/iium-logo.png" alt="" /><strong>MAINBOARD</strong><span>command layer</span></div>
+            {bureaus.map((bureau, i) => <span key={bureau} className={`bureau b${i + 1}`}><i>{String(i + 1).padStart(2, "0")}</i>{bureau}</span>)}
+            <svg viewBox="0 0 700 700" aria-hidden="true"><circle cx="350" cy="350" r="238" /><circle cx="350" cy="350" r="145" /></svg>
           </motion.div>
+        </section>
+
+        <section className="impact scene" id="proof">
+          <SceneHeading eyebrow="09 — Impact & scalability" title="Proven in production." accent="Ready for what’s next." body="The platform has already crossed the line between prototype and dependable infrastructure." />
+          <motion.div className="metrics-grid" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.25 }} transition={{ staggerChildren: 0.12 }}>
+            <Metric value="50+" label="concurrent sessions" detail="with GPS verification" />
+            <Metric value="8" label="active bureaus" detail="sharing 19 operational tools" />
+            <Metric value="≈0" label="installation friction" detail="inside Telegram" />
+            <Metric value="≈0" label="starting infra cost" detail="built to prove value first" />
+          </motion.div>
+        </section>
+
+        <section className="testing scene">
+          <SceneHeading eyebrow="10 — Tested for the real world" title="Load tested." accent="Security hardened." body="Not just designed to look ready—engineered to stay ready under real pressure." center />
+          <div className="test-dashboard">
+            <motion.div className="test-primary" variants={reveal} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+              <div className="test-ring"><strong>1,000</strong><span>concurrent users</span></div>
+              <div className="test-facts">
+                <span><b>51,524</b> requests</span>
+                <span><b>3.5 min</b> test window</span>
+                <span><b>0.00%</b> error rate</span>
+                <span><b>&lt;600ms</b> latency</span>
+              </div>
+            </motion.div>
+            <motion.div className="test-card sustained" variants={reveal} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+              <Timer /><span>SUSTAINED LOAD</span><strong>250 users</strong><p>60 minutes of perfect stability.</p>
+              <div className="signal-bars">{[1,2,3,4,5,6,7,8,9,10,11,12].map(n => <i key={n} style={{ height: `${28 + (n % 4) * 13}%` }} />)}</div>
+            </motion.div>
+            <motion.div className="test-card security" variants={reveal} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+              <ShieldCheck /><span>SECURITY AUDIT</span><strong>11 patched</strong><p>Including critical auth bypass and IP spoofing fixes.</p>
+              <div><Check /> Pre-launch remediation complete</div>
+            </motion.div>
+          </div>
+        </section>
+
+        <section className="upgrade scene">
+          <SceneHeading eyebrow="11 — The upgrade path" title="Scaling for" accent="4,500+ students." body="Success raises the ceiling. The next deployment has two practical routes." />
+          <div className="ceiling">
+            <span>FREE-TIER CEILING</span><strong>2.7M</strong><p>projected requests against a 1M limit</p><div><i /></div>
+          </div>
+          <div className="options">
+            <motion.article variants={reveal} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+              <span>OPTION A</span><Cloud /><h3>Vercel Pro</h3><strong>$20<small>/month</small></strong><ul><li><Check /> 2M invocations</li><li><Check /> No broadcast timeouts</li><li><Check /> Fastest migration path</li></ul>
+            </motion.article>
+            <div className="option-or">OR</div>
+            <motion.article className="recommended" variants={reveal} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+              <span>OPTION B · HIGH CAPACITY</span><Server /><h3>Virtual Private Server</h3><strong>Flat<small>-rate</small></strong><ul><li><Check /> Predictable cost</li><li><Check /> High traffic capacity</li><li><Check /> Full infrastructure control</li></ul>
+            </motion.article>
+          </div>
+        </section>
+
+        <section className="wellbeing scene">
+          <div className="wellbeing-copy">
+            <SceneHeading eyebrow="12 — Technology with care" title="Operations are human." accent="Support should be too." body="TawePro keeps wellbeing reporting and assistance close to the student journey—not hidden in another system." />
+            <div className="care-note"><HeartHandshake /><span><strong>A protected route to help.</strong> Clear reporting, emergency contacts and trackable follow-through.</span></div>
+          </div>
+          <motion.div initial={reduceMotion ? false : { opacity: 0, rotate: 5, y: 80 }} whileInView={{ opacity: 1, rotate: 2, y: 0 }} viewport={{ once: true }} transition={{ duration: 1, ease }}>
+            <PhoneVisual src="/assets/showcase/wellbeing.png" alt="TawePro wellbeing concern form" />
+          </motion.div>
+        </section>
+
+        <section className="reviews scene" id="reviews">
+          <SceneHeading eyebrow="13 — Frontline feedback" title="Built with the community." accent="Loved by the community." body="Unfiltered reactions from the people closest to Ta’aruf Week." center />
+          <div className="marquee-shell">
+            <div className={`review-track${reduceMotion ? " reduced" : ""}`}>
+              {reviewsLoop.map(([quote, author, tag], i) => (
+                <article className="review" key={`${author}-${i}`}>
+                  <div className="review-stars">★★★★★</div>
+                  <span>{tag}</span>
+                  <blockquote>“{quote}”</blockquote>
+                  <footer><i>{author.charAt(0)}</i><div><strong>{author}</strong><small>TawePro testing phase</small></div></footer>
+                </article>
+              ))}
+            </div>
+          </div>
+          <div className="review-summary"><span><strong>11</strong> real voices</span><i /><span><strong>1</strong> shared reaction</span><i /><span className="review-shout">GEMPAK.</span></div>
+        </section>
+
+        <section className="final-cta scene">
+          <div className="final-grid" />
+          <motion.div className="final-mark" initial={reduceMotion ? false : { scale: 0.5, opacity: 0, rotate: -20 }} whileInView={{ scale: 1, opacity: 1, rotate: 0 }} viewport={{ once: true }} transition={{ duration: 1, ease }}>
+            <img src="/assets/iium-logo.png" alt="" />
+          </motion.div>
+          <motion.div className="final-content" variants={reveal} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+            <span className="eyebrow"><i />14 — The invitation</span>
+            <h2>Let’s transform<br /><em>orientation together.</em></h2>
+            <p>We request IIUM’s endorsement to deploy Ta’aruf Week Pro for the 3,000 incoming students.</p>
+            <div className="value-pillars">
+              <span><CircleDollarSign /> Zero cost to deploy</span>
+              <span><Zap /> Zero training needed</span>
+              <span><GraduationCap /> Built by students</span>
+            </div>
+            <div className="final-actions">
+              <a className="button light" href={TELEGRAM_URL} target="_blank" rel="noreferrer"><Send /> Open Telegram bot <ExternalLink /></a>
+              <a className="button outline" href={APP_URL} target="_blank" rel="noreferrer"><Rocket /> View live app <ExternalLink /></a>
+            </div>
+          </motion.div>
+          <div className="final-route" aria-hidden="true"><Route /><span /><span /><span /></div>
+          <footer className="deck-footer"><span>TAWEPRO · JULY 2026</span><span>BUILT AT IIUM, FOR IIUM</span><a href="#top">Back to top ↑</a></footer>
         </section>
       </main>
-
-      <footer className="lr-footer">
-        <a className="lr-brand" href="#top">
-          <span className="lr-brand-mark"><img src="/assets/iium-logo.png" alt="" /></span>
-          <span><strong>IIUMTawePro</strong><small>Garden of Knowledge and Virtue</small></span>
-        </a>
-        <p>An independent Telegram-native companion created for the IIUM student journey.</p>
-        <div>
-          <a href={GITHUB_URL} target="_blank" rel="noreferrer">GitHub <ArrowUpRight size={13} /></a>
-          <a href={TELEGRAM_URL} target="_blank" rel="noreferrer">Telegram <ArrowUpRight size={13} /></a>
-        </div>
-      </footer>
     </div>
   );
 }
