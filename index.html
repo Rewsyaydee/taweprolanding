@@ -4,13 +4,128 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#071d17" />
-    <meta name="description" content="TawePro - a production-ready Telegram Mini App reimagining Ta'aruf Week for the IIUM community." />
-    <meta property="og:title" content="TawePro - Ta'aruf Week Reimagined" />
-    <meta property="og:description" content="A zero-friction orientation and operations platform built by students, for IIUM." />
-    <title>TawePro - Ta'aruf Week Reimagined</title>
+    <title>TawePro | IIUM Ta'aruf Week App in Telegram</title>
+    <meta name="description" content="TawePro is the IIUM Ta'aruf Week app inside Telegram — live schedule, campus routes, GPS check-in, and updates for new students. No install needed." />
+    <meta name="keywords" content="IIUM Ta'aruf Week app, TawePro, IIUM orientation, Taaruf Week, TAWE, Telegram Mini App for student orientation, IIUM" />
+    <meta name="robots" content="index,follow,max-image-preview:large" />
+    <meta name="author" content="TawePro / Rewsyaydee" />
+    <link rel="canonical" href="https://tawepro.rewsyaydee.tech/" />
+    <link rel="alternate" hreflang="en" href="https://tawepro.rewsyaydee.tech/?lang=en" />
+    <link rel="alternate" hreflang="ms" href="https://tawepro.rewsyaydee.tech/?lang=ms" />
+    <link rel="alternate" hreflang="x-default" href="https://tawepro.rewsyaydee.tech/" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_MY" />
+    <meta property="og:locale:alternate" content="ms_MY" />
+    <meta property="og:site_name" content="TawePro" />
+    <meta property="og:url" content="https://tawepro.rewsyaydee.tech/" />
+    <meta property="og:title" content="TawePro | IIUM Ta'aruf Week App in Telegram" />
+    <meta property="og:description" content="The IIUM Ta'aruf Week app for new students: live schedule, campus routes, GPS attendance, and orientation updates inside Telegram." />
+    <meta property="og:image" content="https://tawepro.rewsyaydee.tech/assets/showcase/dashboard.png" />
+    <meta property="og:image:alt" content="TawePro IIUM Ta'aruf Week app student dashboard" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="TawePro | IIUM Ta'aruf Week App in Telegram" />
+    <meta name="twitter:description" content="IIUM orientation made simple: TawePro is the Ta'aruf Week app inside Telegram. No install, no signup." />
+    <meta name="twitter:image" content="https://tawepro.rewsyaydee.tech/assets/showcase/dashboard.png" />
+
+    <link rel="icon" href="/assets/iium-logo.png" type="image/png" />
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://tawepro.rewsyaydee.tech/#website",
+          "url": "https://tawepro.rewsyaydee.tech/",
+          "name": "TawePro",
+          "description": "IIUM Ta'aruf Week app and Telegram Mini App for student orientation.",
+          "inLanguage": ["en", "ms"],
+          "publisher": { "@id": "https://tawepro.rewsyaydee.tech/#org" }
+        },
+        {
+          "@type": "Organization",
+          "@id": "https://tawepro.rewsyaydee.tech/#org",
+          "name": "TawePro",
+          "url": "https://tawepro.rewsyaydee.tech/",
+          "logo": "https://tawepro.rewsyaydee.tech/assets/iium-logo.png"
+        },
+        {
+          "@type": "SoftwareApplication",
+          "@id": "https://tawepro.rewsyaydee.tech/#app",
+          "name": "TawePro",
+          "alternateName": ["IIUMTawePro", "IIUM Ta'aruf Week app", "Ta'aruf Week Pro"],
+          "applicationCategory": "EducationalApplication",
+          "operatingSystem": "Telegram",
+          "description": "TawePro is an IIUM Ta'aruf Week app and Telegram Mini App for student orientation with live schedules, campus routes, GPS-verified attendance, announcements, and wellbeing support.",
+          "url": "https://tawepro.rewsyaydee.tech/",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "MYR"
+          },
+          "audience": {
+            "@type": "EducationalAudience",
+            "educationalRole": "student"
+          }
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://tawepro.rewsyaydee.tech/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "What is the IIUM Ta'aruf Week app?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "TawePro is the IIUM Ta'aruf Week app built as a Telegram Mini App for student orientation. It helps new IIUM students follow live schedules, campus routes, GPS check-in, announcements, and support without installing a separate app."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How do I open TawePro?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Open TawePro in Telegram through t.me/iiumtaweprobot. There is no App Store or Play Store install and no separate signup."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Is TawePro only for Malaysian students?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "TawePro is built for all IIUM new-intake students, including Malaysian and international students joining IIUM orientation and Ta'aruf Week."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What can students do in the Ta'aruf Week Telegram Mini App?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Students can view live event schedules, navigate campus venues, complete GPS-verified attendance, receive orientation updates, track progress, and access wellbeing support."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
   </head>
   <body>
     <div id="root"></div>
+
+    <!-- Crawler-visible content shell (replaced by React on load) -->
+    <noscript>
+      <main>
+        <h1>TawePro — IIUM Ta'aruf Week App in Telegram</h1>
+        <p>TawePro is the IIUM Ta'aruf Week app for student orientation. New IIUM students can open it inside Telegram for live schedules, campus routes, GPS attendance, TAWE updates, and support — with no install and no separate login.</p>
+        <p><a href="https://t.me/iiumtaweprobot">Open the IIUM orientation Telegram Mini App</a></p>
+        <h2>Aplikasi Ta'aruf Week IIUM dalam Telegram</h2>
+        <p>TawePro ialah aplikasi Ta'aruf Week IIUM untuk orientasi pelajar. Pelajar baharu IIUM boleh buka dalam Telegram untuk jadual langsung, laluan kampus, kehadiran GPS, makluman TAWE, dan sokongan — tanpa muat turun aplikasi berasingan.</p>
+      </main>
+    </noscript>
+
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
