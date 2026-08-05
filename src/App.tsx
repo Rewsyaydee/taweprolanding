@@ -11,10 +11,8 @@ import {
   ArrowDown,
   ArrowRight,
   BellRing,
-  Building2,
   CalendarRange,
   Check,
-  ChevronDown,
   CircleDollarSign,
   Cloud,
   Code2,
@@ -37,7 +35,6 @@ import {
   Server,
   ShieldCheck,
   Smartphone,
-  Sparkles,
   Timer,
   Users,
   WifiOff,
@@ -48,6 +45,9 @@ import "./landing.css";
 
 const TELEGRAM_URL = "https://t.me/iiumtaweprobot";
 const APP_URL = "https://iium-tawe-pro.vercel.app";
+const SITE_URL = "https://tawepro.rewsyaydee.tech";
+
+type Lang = "en" | "ms";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 const reveal = {
@@ -69,12 +69,254 @@ const reviews = [
   ["Weah syedii sgt membantu wei 🥹🥹🥹 Dia cam tersusun gak skit kerja ii", "Arep PC Tawe", "Organization & practicality"],
 ];
 
-const roles = [
-  { tag: "01", title: "Students", copy: "Navigate the week, find every session, verify attendance and get help without leaving Telegram.", icon: Navigation, color: "cyan" },
-  { tag: "02", title: "Committee", copy: "Manage assigned work, submit evidence and keep field operations moving in real time.", icon: Users, color: "gold" },
-  { tag: "03", title: "Bureau Heads", copy: "See readiness, coordinate people and issue alerts before small problems become large ones.", icon: Gauge, color: "coral" },
-  { tag: "04", title: "Mainboard", copy: "Control users, broadcasts and the complete operational picture from one command layer.", icon: ShieldCheck, color: "lime" },
-];
+const copy = {
+  en: {
+    brandSub: "IIUM Ta'aruf Week app",
+    nav: { problem: "Problem", solution: "Solution", proof: "Proof", reviews: "Voices", faq: "FAQ", launch: "Open app" },
+    skip: "Skip to content",
+    kicker: "IIUM Ta'aruf Week app · Telegram Mini App",
+    h1a: "IIUM Ta'aruf Week app",
+    h1b: "inside Telegram.",
+    heroP: "TawePro helps new IIUM students through orientation and TAWE with live schedules, campus routes, GPS check-in, and updates — no install, no separate signup.",
+    ctaExplore: "See how it works",
+    ctaTelegram: "Open in Telegram",
+    heroFoot: ["Orientation-ready", "Built by students", "For the IIUM community"],
+    scroll: "Scroll to explore",
+    demoEyebrow: "01 — Experience the app",
+    demoTitle: "Not a concept.",
+    demoAccent: "A living IIUM orientation app.",
+    demoBody: "Your Ta'aruf Week journey runs where IIUM students already are: inside Telegram.",
+    demoLeftTag: "HAPPENING NOW",
+    demoLeftTitle: "One calm source of truth.",
+    demoLeftBody: "Schedule, destination, check-in and support move with the student—moment by moment.",
+    demoRightTag: "ZERO FRICTION",
+    demoRightTitle: "Tap. Arrive. Belong.",
+    demoRightBody: "No store search, installation, account form or forgotten password between arrival and action.",
+    labels: ["Instant entry", "Offline-aware", "Verified identity"],
+    problemEyebrow: "02 — Orientation without a compass",
+    problemTitle: "50+ sessions. 12 venues.",
+    problemAccent: "Zero coordination tools.",
+    problemBody: "Old IIUM orientation workflows ask thousands of new students—and the teams serving them—to assemble the truth from fragments.",
+    pains: [
+      ["Scattered campus", "ICC, mosque, clinics and halls—with no digital path between them."],
+      ["Updates disappear", "Emergency Ta'aruf Week changes get buried inside noisy Telegram channels."],
+      ["Paper attendance", "Punch cards create queues, delays and an easy path to fraud."],
+      ["Eight siloed bureaus", "No shared command layer for task ownership or live readiness."],
+    ],
+    problemFooter: ["Confusion", "Delay", "Risk", "There had to be a better route."],
+    originEyebrow: "03 — The origin",
+    originTitle: "Why a Telegram",
+    originAccent: "Mini App?",
+    originBody: "The dream was to digitise Ta'aruf Week and IIUM orientation. The first obstacle was not technology—it was access.",
+    originSteps: [
+      ["01 / THE BARRIER", "RM500 before the first student.", "App Store and Play Store deployment fees create a needless barrier for a student-built community tool."],
+      ["02 / THE PIVOT", "The super app was already installed.", "Telegram already held the audience, identity and daily communication layer. No forced download required."],
+      ["03 / THE REALITY", "Passion became production.", "A student idea matured into a fast, secure and deployed IIUM Ta'aruf Week app."],
+    ],
+    solutionEyebrow: "04 — The solution",
+    solutionTitle: "No install. No sign-up.",
+    solutionAccent: "No friction.",
+    solutionBody: "TawePro is a Telegram Mini App for student orientation — a direct path from announcement to action.",
+    solFeatures: [
+      ["53", "Real events", "An interactive Ta'aruf Week timeline understands past, now and next."],
+      ["200m", "GPS verification", "Presence is confirmed at the venue—not on a paper card."],
+      ["Live", "Emergency broadcasts", "Critical IIUM orientation changes reach the right people fast."],
+    ],
+    walkEyebrow: "05 — Student walkthrough",
+    walkTitle: "From first arrival",
+    walkAccent: "to the final ceremony.",
+    walkBody: "One continuous IIUM orientation journey. Every screen knows what the student needs next.",
+    walkSteps: ["Open instantly", "Find the route", "Verify arrival"],
+    audEyebrow: "06 — Four views, one system",
+    audTitle: "One platform serving",
+    audAccent: "four audiences.",
+    audBody: "Each role sees a focused surface. Together, they create one reliable operational picture for TAWE.",
+    roles: [
+      { tag: "01", title: "Students", copy: "Navigate Ta'aruf Week, find every session, verify attendance and get help without leaving Telegram." },
+      { tag: "02", title: "Committee", copy: "Manage assigned work, submit evidence and keep field operations moving in real time." },
+      { tag: "03", title: "Bureau Heads", copy: "See readiness, coordinate people and issue alerts before small problems become large ones." },
+      { tag: "04", title: "Mainboard", copy: "Control users, broadcasts and the complete operational picture from one command layer." },
+    ],
+    archEyebrow: "07 — Under the surface",
+    archTitle: "Production-ready",
+    archAccent: "architecture.",
+    archBody: "Enterprise-grade foundations, composed for performance, security and scale.",
+    cmdEyebrow: "08 — Committee command center",
+    cmdTitle: "Eight bureaus.",
+    cmdAccent: "One pulse.",
+    cmdBody: "Every operational team keeps its own focus while sharing the same live system.",
+    tools: "operational tools",
+    impactEyebrow: "09 — Impact & scalability",
+    impactTitle: "Proven in production.",
+    impactAccent: "Ready for what’s next.",
+    impactBody: "The IIUM Ta'aruf Week app has already crossed the line between prototype and dependable infrastructure.",
+    metrics: [
+      ["50+", "concurrent sessions", "with GPS verification"],
+      ["8", "active bureaus", "sharing 19 operational tools"],
+      ["≈0", "installation friction", "inside Telegram"],
+      ["≈0", "starting infra cost", "built to prove value first"],
+    ],
+    testEyebrow: "10 — Tested for the real world",
+    testTitle: "Load tested.",
+    testAccent: "Security hardened.",
+    testBody: "Not just designed to look ready—engineered to stay ready under real pressure.",
+    upgradeEyebrow: "11 — The upgrade path",
+    upgradeTitle: "Scaling for",
+    upgradeAccent: "4,500+ students.",
+    upgradeBody: "Success raises the ceiling. The next deployment has two practical routes.",
+    careEyebrow: "12 — Technology with care",
+    careTitle: "Operations are human.",
+    careAccent: "Support should be too.",
+    careBody: "TawePro keeps wellbeing reporting and assistance close to the student journey—not hidden in another system.",
+    careNote: "A protected route to help.",
+    careNoteBody: "Clear reporting, emergency contacts and trackable follow-through.",
+    revEyebrow: "13 — Frontline feedback",
+    revTitle: "Built with the community.",
+    revAccent: "Loved by the community.",
+    revBody: "Unfiltered reactions from the people closest to Ta'aruf Week and IIUM orientation.",
+    faqEyebrow: "14 — Student FAQ",
+    faqTitle: "Questions new IIUM",
+    faqAccent: "students ask.",
+    faqBody: "Straight answers about the IIUM Ta'aruf Week app, Telegram access, and orientation support.",
+    faqs: [
+      ["What is the IIUM Ta'aruf Week app?", "TawePro is the IIUM Ta'aruf Week app built as a Telegram Mini App for student orientation. It helps new students follow live schedules, campus routes, GPS check-in, announcements, and support."],
+      ["How do I open TawePro?", "Open TawePro in Telegram at t.me/iiumtaweprobot. No App Store or Play Store install. No separate signup."],
+      ["Is this for international IIUM students too?", "Yes. TawePro is for all IIUM new-intake students, including Malaysian and international students joining orientation and Ta'aruf Week."],
+      ["What can I do during IIUM orientation?", "View the Ta'aruf Week schedule, navigate campus venues, complete GPS-verified attendance, receive TAWE updates, track progress, and access wellbeing support."],
+    ],
+    finalEyebrow: "15 — Start here",
+    finalTitle: "Your IIUM orientation",
+    finalAccent: "route is ready.",
+    finalBody: "Open the IIUM Ta'aruf Week app in Telegram and move through TAWE with a clearer path.",
+    pillars: ["Free for students", "No install needed", "Built by students"],
+    finalTg: "Open Telegram bot",
+    finalApp: "View live app",
+    footer: ["TAWEPRO · IIUM TA'ARUF WEEK APP", "BUILT AT IIUM, FOR IIUM", "Back to top ↑"],
+  },
+  ms: {
+    brandSub: "Aplikasi Ta'aruf Week IIUM",
+    nav: { problem: "Masalah", solution: "Penyelesaian", proof: "Bukti", reviews: "Suara", faq: "Soalan", launch: "Buka app" },
+    skip: "Langkau ke kandungan",
+    kicker: "Aplikasi Ta'aruf Week IIUM · Telegram Mini App",
+    h1a: "Aplikasi Ta'aruf Week IIUM",
+    h1b: "dalam Telegram.",
+    heroP: "TawePro membantu pelajar baharu IIUM sepanjang orientasi dan TAWE dengan jadual langsung, laluan kampus, daftar kehadiran GPS, dan makluman — tanpa muat turun atau daftar masuk berasingan.",
+    ctaExplore: "Lihat cara ia berfungsi",
+    ctaTelegram: "Buka dalam Telegram",
+    heroFoot: ["Sedia untuk orientasi", "Dibina oleh pelajar", "Untuk komuniti IIUM"],
+    scroll: "Tatal untuk teroka",
+    demoEyebrow: "01 — Alami aplikasinya",
+    demoTitle: "Bukan konsep.",
+    demoAccent: "Aplikasi orientasi IIUM yang hidup.",
+    demoBody: "Perjalanan Ta'aruf Week anda berjalan di tempat pelajar IIUM sudah berada: dalam Telegram.",
+    demoLeftTag: "SEDANG BERLAKU",
+    demoLeftTitle: "Satu sumber maklumat yang tenang.",
+    demoLeftBody: "Jadual, destinasi, daftar masuk dan sokongan bergerak bersama pelajar—saat demi saat.",
+    demoRightTag: "TANPA GESERAN",
+    demoRightTitle: "Ketik. Tiba. Rasa milik.",
+    demoRightBody: "Tiada carian store, pemasangan, borang akaun atau kata laluan terlupa antara ketibaan dan tindakan.",
+    labels: ["Akses serta-merta", "Sedia luar talian", "Identiti disahkan"],
+    problemEyebrow: "02 — Orientasi tanpa kompas",
+    problemTitle: "50+ sesi. 12 lokasi.",
+    problemAccent: "Tiada alat koordinasi.",
+    problemBody: "Aliran lama orientasi IIUM meminta ribuan pelajar baharu—dan pasukan yang melayani mereka—menyusun kebenaran daripada serpihan maklumat.",
+    pains: [
+      ["Kampus tersebar", "ICC, masjid, klinik dan dewan—tanpa laluan digital di antaranya."],
+      ["Makluman hilang", "Perubahan kecemasan Ta'aruf Week tertimbus dalam saluran Telegram yang bising."],
+      ["Kehadiran kertas", "Kad tumbuk wujudkan barisan, kelewatan dan penipuan mudah."],
+      ["Lapan biro berasingan", "Tiada lapisan perintah bersama untuk tugasan atau kesediaan langsung."],
+    ],
+    problemFooter: ["Kekeliruan", "Kelewatan", "Risiko", "Mesti ada laluan yang lebih baik."],
+    originEyebrow: "03 — Asal usul",
+    originTitle: "Mengapa Telegram",
+    originAccent: "Mini App?",
+    originBody: "Impiannya ialah mendigitalkan Ta'aruf Week dan orientasi IIUM. Halangan pertama bukan teknologi—tetapi akses.",
+    originSteps: [
+      ["01 / HALANGAN", "RM500 sebelum pelajar pertama.", "Yuran App Store dan Play Store menjadi halangan sia-sia untuk alat komuniti binaan pelajar."],
+      ["02 / PIVOT", "Super app sudah dipasang.", "Telegram sudah memegang audiens, identiti dan komunikasi harian. Tiada muat turun paksa."],
+      ["03 / REALITI", "Minat jadi produk sebenar.", "Idea pelajar matang menjadi aplikasi Ta'aruf Week IIUM yang pantas, selamat dan sudah dilancarkan."],
+    ],
+    solutionEyebrow: "04 — Penyelesaian",
+    solutionTitle: "Tiada pasang. Tiada daftar.",
+    solutionAccent: "Tiada geseran.",
+    solutionBody: "TawePro ialah Telegram Mini App untuk orientasi pelajar — laluan terus daripada pengumuman ke tindakan.",
+    solFeatures: [
+      ["53", "Acara sebenar", "Garis masa Ta'aruf Week memahami lepas, sekarang dan seterusnya."],
+      ["200m", "Pengesahan GPS", "Kehadiran disahkan di lokasi—bukan pada kad kertas."],
+      ["Langsung", "Siaran kecemasan", "Perubahan penting orientasi IIUM sampai pantas kepada orang yang betul."],
+    ],
+    walkEyebrow: "05 — Panduan pelajar",
+    walkTitle: "Dari ketibaan pertama",
+    walkAccent: "ke majlis penutup.",
+    walkBody: "Satu perjalanan orientasi IIUM yang berterusan. Setiap skrin tahu apa yang pelajar perlukan seterusnya.",
+    walkSteps: ["Buka serta-merta", "Cari laluan", "Sahkan ketibaan"],
+    audEyebrow: "06 — Empat pandangan, satu sistem",
+    audTitle: "Satu platform melayani",
+    audAccent: "empat audiens.",
+    audBody: "Setiap peranan nampak permukaan fokus. Bersama, mereka cipta gambaran operasi TAWE yang boleh dipercayai.",
+    roles: [
+      { tag: "01", title: "Pelajar", copy: "Navigasi Ta'aruf Week, cari setiap sesi, sahkan kehadiran dan dapat bantuan tanpa tinggalkan Telegram." },
+      { tag: "02", title: "Jawatankuasa", copy: "Urus tugasan, hantar bukti dan pastikan operasi lapangan bergerak secara masa nyata." },
+      { tag: "03", title: "Ketua Biro", copy: "Lihat kesediaan, selaras orang dan keluarkan amaran sebelum masalah kecil jadi besar." },
+      { tag: "04", title: "Mainboard", copy: "Kawal pengguna, siaran dan gambaran operasi penuh dari satu lapisan perintah." },
+    ],
+    archEyebrow: "07 — Di sebalik permukaan",
+    archTitle: "Sedia produksi.",
+    archAccent: "senibina mantap.",
+    archBody: "Asas gred enterprise, disusun untuk prestasi, keselamatan dan skala.",
+    cmdEyebrow: "08 — Pusat perintah jawatankuasa",
+    cmdTitle: "Lapan biro.",
+    cmdAccent: "Satu denyutan.",
+    cmdBody: "Setiap pasukan operasi kekal fokus sambil berkongsi sistem langsung yang sama.",
+    tools: "alat operasi",
+    impactEyebrow: "09 — Impak & skalabiliti",
+    impactTitle: "Terbukti dalam produksi.",
+    impactAccent: "Sedia untuk langkah seterusnya.",
+    impactBody: "Aplikasi Ta'aruf Week IIUM sudah melintasi garisan antara prototaip dan infrastruktur yang boleh dipercayai.",
+    metrics: [
+      ["50+", "sesi serentak", "dengan pengesahan GPS"],
+      ["8", "biro aktif", "berkongsi 19 alat operasi"],
+      ["≈0", "geseran pemasangan", "dalam Telegram"],
+      ["≈0", "kos infra awal", "dibina untuk buktikan nilai dulu"],
+    ],
+    testEyebrow: "10 — Diuji untuk dunia sebenar",
+    testTitle: "Ujian beban.",
+    testAccent: "Keselamatan diperkukuh.",
+    testBody: "Bukan sekadar nampak sedia—direka untuk kekal sedia di bawah tekanan sebenar.",
+    upgradeEyebrow: "11 — Laluan naik taraf",
+    upgradeTitle: "Berskala untuk",
+    upgradeAccent: "4,500+ pelajar.",
+    upgradeBody: "Kejayaan menaikkan had. Penerapan seterusnya ada dua laluan praktikal.",
+    careEyebrow: "12 — Teknologi dengan keprihatinan",
+    careTitle: "Operasi itu manusiawi.",
+    careAccent: "Sokongan mesti begitu juga.",
+    careBody: "TawePro pastikan laporan kesejahteraan dan bantuan dekat dengan perjalanan pelajar—bukan tersembunyi dalam sistem lain.",
+    careNote: "Laluan terlindung untuk minta bantuan.",
+    careNoteBody: "Laporan jelas, kenalan kecemasan dan susulan yang boleh dijejak.",
+    revEyebrow: "13 — Maklum balas barisan hadapan",
+    revTitle: "Dibina bersama komuniti.",
+    revAccent: "Disukai komuniti.",
+    revBody: "Reaksi tanpa tapis daripada orang terdekat dengan Ta'aruf Week dan orientasi IIUM.",
+    faqEyebrow: "14 — Soalan lazim pelajar",
+    faqTitle: "Soalan pelajar baharu",
+    faqAccent: "IIUM.",
+    faqBody: "Jawapan terus tentang aplikasi Ta'aruf Week IIUM, akses Telegram, dan sokongan orientasi.",
+    faqs: [
+      ["Apa itu aplikasi Ta'aruf Week IIUM?", "TawePro ialah aplikasi Ta'aruf Week IIUM dibina sebagai Telegram Mini App untuk orientasi pelajar. Ia bantu pelajar baharu ikut jadual langsung, laluan kampus, daftar GPS, makluman dan sokongan."],
+      ["Bagaimana nak buka TawePro?", "Buka TawePro dalam Telegram di t.me/iiumtaweprobot. Tiada pasang dari App Store atau Play Store. Tiada daftar masuk berasingan."],
+      ["Adakah ini untuk pelajar antarabangsa IIUM juga?", "Ya. TawePro untuk semua pelajar ambilan baharu IIUM, termasuk pelajar Malaysia dan antarabangsa yang menyertai orientasi dan Ta'aruf Week."],
+      ["Apa yang boleh saya buat semasa orientasi IIUM?", "Lihat jadual Ta'aruf Week, navigasi lokasi kampus, lengkapkan kehadiran GPS, terima makluman TAWE, jejak kemajuan, dan akses sokongan kesejahteraan."],
+    ],
+    finalEyebrow: "15 — Mulakan di sini",
+    finalTitle: "Laluan orientasi IIUM",
+    finalAccent: "anda sudah sedia.",
+    finalBody: "Buka aplikasi Ta'aruf Week IIUM dalam Telegram dan lalui TAWE dengan laluan yang lebih jelas.",
+    pillars: ["Percuma untuk pelajar", "Tanpa pasang app", "Dibina oleh pelajar"],
+    finalTg: "Buka bot Telegram",
+    finalApp: "Lihat app langsung",
+    footer: ["TAWEPRO · APLIKASI TA'ARUF WEEK IIUM", "DIBINA DI IIUM, UNTUK IIUM", "Kembali ke atas ↑"],
+  },
+} as const;
 
 const bureaus = [
   "Catering",
@@ -93,6 +335,8 @@ const stack = [
   { icon: Cloud, label: "DELIVERY", title: "Vercel Serverless", copy: "18 API actions distributed through production-ready serverless infrastructure." },
   { icon: LockKeyhole, label: "IDENTITY", title: "Telegram + JWT", copy: "initData validation, Supabase JWT and offline service-worker caching." },
 ];
+
+const roleIcons = [Navigation, Users, Gauge, ShieldCheck];
 
 function SceneHeading({ eyebrow, title, accent, body, center = false }: {
   eyebrow: string; title: string; accent?: string; body?: string; center?: boolean;
@@ -133,8 +377,22 @@ function Metric({ value, label, detail }: { value: string; label: string; detail
   );
 }
 
+function detectLang(): Lang {
+  if (typeof window === "undefined") return "en";
+  const params = new URLSearchParams(window.location.search);
+  const q = params.get("lang");
+  if (q === "ms" || q === "bm") return "ms";
+  if (q === "en") return "en";
+  const saved = window.localStorage.getItem("tawepro-lang");
+  if (saved === "ms" || saved === "en") return saved;
+  const nav = navigator.language?.toLowerCase() || "";
+  if (nav.startsWith("ms") || nav.startsWith("id")) return "ms";
+  return "en";
+}
+
 function App() {
   const reduceMotion = useReducedMotion();
+  const [lang, setLang] = useState<Lang>("en");
   const [menu, setMenu] = useState(false);
   const [activeRole, setActiveRole] = useState(0);
   const [scrollPercent, setScrollPercent] = useState(0);
@@ -143,42 +401,86 @@ function App() {
   const heroY = useTransform(scrollYProgress, [0, 0.12], [0, reduceMotion ? 0 : 180]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.09], [1, 0]);
   const reviewsLoop = useMemo(() => [...reviews, ...reviews], []);
+  const t = copy[lang];
 
   useMotionValueEvent(scrollYProgress, "change", (value) => setScrollPercent(Math.round(value * 100)));
 
   useEffect(() => {
     document.documentElement.classList.add("pitch-active");
+    setLang(detectLang());
     return () => document.documentElement.classList.remove("pitch-active");
   }, []);
 
+  useEffect(() => {
+    document.documentElement.lang = lang === "ms" ? "ms" : "en";
+    window.localStorage.setItem("tawepro-lang", lang);
+    const url = new URL(window.location.href);
+    url.searchParams.set("lang", lang);
+    window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
+  }, [lang]);
+
+  const switchLang = (next: Lang) => {
+    setLang(next);
+    setMenu(false);
+  };
+
   return (
-    <div className="pitch">
-      <a className="skip-link" href="#content">Skip to presentation</a>
+    <div className="pitch" data-lang={lang}>
+      <a className="skip-link" href="#content">{t.skip}</a>
+
+      {/* SEO-visible static shell for crawlers and accessibility */}
+      <div className="seo-shell" aria-hidden={false}>
+        <h1>TawePro — IIUM Ta'aruf Week App in Telegram</h1>
+        <p>
+          TawePro is the IIUM Ta'aruf Week app and a Telegram Mini App for student orientation.
+          New IIUM students use it for live schedules, campus routes, GPS attendance, TAWE updates, and support — with no install and no separate login.
+        </p>
+        <p>
+          TawePro ialah aplikasi Ta'aruf Week IIUM dan Telegram Mini App untuk orientasi pelajar.
+          Pelajar baharu IIUM menggunakannya untuk jadual langsung, laluan kampus, kehadiran GPS, makluman TAWE, dan sokongan — tanpa muat turun aplikasi berasingan.
+        </p>
+        <p>
+          Official site: <a href={SITE_URL}>{SITE_URL}</a>. Open app: <a href={TELEGRAM_URL}>{TELEGRAM_URL}</a>.
+        </p>
+      </div>
 
       <motion.div className="progress-line" style={{ scaleX: smoothProgress }} />
       <div className="progress-count" aria-hidden="true">{String(scrollPercent).padStart(2, "0")}%</div>
 
       <header className="deck-nav">
         <a href="#top" className="brand" aria-label="TawePro home">
-          <span className="brand-orbit"><img src="/assets/iium-logo.png" alt="" /></span>
-          <span><b>TawePro</b><small>Ta’aruf Week, reimagined</small></span>
+          <span className="brand-orbit"><img src="/assets/iium-logo.png" alt="IIUM" /></span>
+          <span><b>TawePro</b><small>{t.brandSub}</small></span>
         </a>
-        <nav aria-label="Pitch deck navigation">
-          <a href="#problem">Problem</a>
-          <a href="#solution">Solution</a>
-          <a href="#proof">Proof</a>
-          <a href="#reviews">Voices</a>
+        <nav aria-label="Primary">
+          <a href="#problem">{t.nav.problem}</a>
+          <a href="#solution">{t.nav.solution}</a>
+          <a href="#proof">{t.nav.proof}</a>
+          <a href="#reviews">{t.nav.reviews}</a>
+          <a href="#faq">{t.nav.faq}</a>
         </nav>
-        <a className="nav-cta" href={TELEGRAM_URL} target="_blank" rel="noreferrer">
-          Launch app <ExternalLink size={14} />
-        </a>
+        <div className="nav-tools">
+          <div className="lang-switch" role="group" aria-label="Language">
+            <button type="button" className={lang === "en" ? "active" : ""} aria-pressed={lang === "en"} onClick={() => switchLang("en")}>EN</button>
+            <button type="button" className={lang === "ms" ? "active" : ""} aria-pressed={lang === "ms"} onClick={() => switchLang("ms")}>BM</button>
+          </div>
+          <a className="nav-cta" href={TELEGRAM_URL} target="_blank" rel="noreferrer">
+            {t.nav.launch} <ExternalLink size={14} />
+          </a>
+        </div>
         <button className="menu-btn" aria-label={menu ? "Close navigation" : "Open navigation"} aria-expanded={menu} onClick={() => setMenu(!menu)}>
           {menu ? <X /> : <Menu />}
         </button>
         {menu && (
           <div className="mobile-nav">
-            {["problem", "solution", "proof", "reviews"].map((id) => <a key={id} href={`#${id}`} onClick={() => setMenu(false)}>{id}</a>)}
-            <a href={TELEGRAM_URL} target="_blank" rel="noreferrer">Launch app</a>
+            {(["problem", "solution", "proof", "reviews", "faq"] as const).map((id) => (
+              <a key={id} href={`#${id}`} onClick={() => setMenu(false)}>{t.nav[id === "faq" ? "faq" : id]}</a>
+            ))}
+            <div className="lang-switch mobile">
+              <button type="button" className={lang === "en" ? "active" : ""} onClick={() => switchLang("en")}>EN</button>
+              <button type="button" className={lang === "ms" ? "active" : ""} onClick={() => switchLang("ms")}>BM</button>
+            </div>
+            <a href={TELEGRAM_URL} target="_blank" rel="noreferrer">{t.nav.launch}</a>
           </div>
         )}
       </header>
@@ -192,160 +494,158 @@ function App() {
 
           <motion.div className="hero-inner" style={{ y: heroY, opacity: heroOpacity }}>
             <motion.div className="hero-kicker" initial={reduceMotion ? false : { opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-              <Radio size={15} /> A production-ready Telegram Mini App
+              <Radio size={15} /> {t.kicker}
             </motion.div>
             <motion.h1 initial={reduceMotion ? false : { opacity: 0, y: 55 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: 0.12, ease }}>
-              Ta’aruf Week
-              <span>Reimagined.</span>
+              {t.h1a}
+              <span>{t.h1b}</span>
             </motion.h1>
             <motion.p initial={reduceMotion ? false : { opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3, ease }}>
-              A zero-friction operating system transforming orientation for <strong>3,000+ students</strong> at IIUM.
+              {t.heroP}
             </motion.p>
             <motion.div className="hero-actions" initial={reduceMotion ? false : { opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.55 }}>
-              <a className="button primary" href="#demo"><Play size={17} fill="currentColor" /> Enter the experience</a>
-              <a className="button ghost" href={TELEGRAM_URL} target="_blank" rel="noreferrer"><Send size={17} /> Open in Telegram</a>
+              <a className="button primary" href="#demo"><Play size={17} fill="currentColor" /> {t.ctaExplore}</a>
+              <a className="button ghost" href={TELEGRAM_URL} target="_blank" rel="noreferrer"><Send size={17} /> {t.ctaTelegram}</a>
             </motion.div>
             <motion.div className="hero-foot" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>
-              <span>July 2026</span><i /><span>Built by students</span><i /><span>For the IIUM community</span>
+              <span>{t.heroFoot[0]}</span><i /><span>{t.heroFoot[1]}</span><i /><span>{t.heroFoot[2]}</span>
             </motion.div>
           </motion.div>
 
-          <motion.div className="hero-route" aria-hidden="true" initial={reduceMotion ? false : { pathLength: 0 }}>
+          <motion.div className="hero-route" aria-hidden="true">
             <svg viewBox="0 0 1600 400">
               <motion.path d="M-60 310C250 80 410 390 690 190S1110 70 1660 250" initial={reduceMotion ? false : { pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 3, delay: 0.5, ease }} />
             </svg>
             <span className="route-node n1" /><span className="route-node n2" /><span className="route-node n3" />
           </motion.div>
-          <a className="scroll-cue" href="#demo"><span>Scroll to explore</span><ArrowDown size={18} /></a>
+          <a className="scroll-cue" href="#demo"><span>{t.scroll}</span><ArrowDown size={18} /></a>
         </section>
 
         <section className="demo scene" id="demo">
-          <SceneHeading eyebrow="01 — Experience the app" title="Not a concept." accent="A living product." body="A student’s entire orientation journey, running where they already are: inside Telegram." center />
+          <SceneHeading eyebrow={t.demoEyebrow} title={t.demoTitle} accent={t.demoAccent} body={t.demoBody} center />
           <div className="demo-stage">
             <motion.div className="demo-copy left" variants={reveal} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-              <span>HAPPENING NOW</span>
-              <h3>One calm source of truth.</h3>
-              <p>Schedule, destination, check-in and support move with the student—moment by moment.</p>
+              <span>{t.demoLeftTag}</span>
+              <h3>{t.demoLeftTitle}</h3>
+              <p>{t.demoLeftBody}</p>
             </motion.div>
             <motion.div initial={reduceMotion ? false : { opacity: 0, scale: 0.8, rotate: -5 }} whileInView={{ opacity: 1, scale: 1, rotate: 0 }} viewport={{ once: true, amount: 0.25 }} transition={{ duration: 1.2, ease }}>
-              <PhoneVisual src="/assets/showcase/dashboard.png" alt="TawePro student dashboard shown inside a phone" className="hero-phone" />
+              <PhoneVisual src="/assets/showcase/dashboard.png" alt="TawePro IIUM Ta'aruf Week app student dashboard" className="hero-phone" />
             </motion.div>
             <motion.div className="demo-copy right" variants={reveal} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-              <span>ZERO FRICTION</span>
-              <h3>Tap. Arrive. Belong.</h3>
-              <p>No store search, installation, account form or forgotten password between arrival and action.</p>
+              <span>{t.demoRightTag}</span>
+              <h3>{t.demoRightTitle}</h3>
+              <p>{t.demoRightBody}</p>
             </motion.div>
           </div>
-          <div className="demo-labels"><span><Zap /> Instant entry</span><span><WifiOff /> Offline-aware</span><span><ShieldCheck /> Verified identity</span></div>
+          <div className="demo-labels">
+            <span><Zap /> {t.labels[0]}</span>
+            <span><WifiOff /> {t.labels[1]}</span>
+            <span><ShieldCheck /> {t.labels[2]}</span>
+          </div>
         </section>
 
         <section className="problem scene" id="problem">
           <div className="problem-number">50+</div>
-          <SceneHeading eyebrow="02 — Orientation without a compass" title="50+ sessions. 12 venues." accent="Zero coordination tools." body="The old system asks thousands of new students—and the teams serving them—to assemble the truth from fragments." />
+          <SceneHeading eyebrow={t.problemEyebrow} title={t.problemTitle} accent={t.problemAccent} body={t.problemBody} />
           <div className="pain-grid">
-            {[
-              [MapPinned, "Scattered campus", "ICC, mosque, clinics and halls—with no digital path between them."],
-              [BellRing, "Updates disappear", "Emergency changes are buried inside noisy Telegram channels."],
-              [Check, "Paper attendance", "Punch cards create queues, delays and an easy path to fraud."],
-              [Users, "Eight siloed bureaus", "No shared command layer for task ownership or live readiness."],
-            ].map(([Icon, title, copy], i) => {
-              const I = Icon as typeof MapPinned;
+            {t.pains.map(([title, body], i) => {
+              const Icon = [MapPinned, BellRing, Check, Users][i];
               return (
-                <motion.article key={title as string} variants={reveal} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} transition={{ delay: i * 0.1, duration: 0.7, ease }}>
-                  <span className="pain-index">0{i + 1}</span><I /><h3>{title as string}</h3><p>{copy as string}</p>
+                <motion.article key={title} variants={reveal} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.3 }} transition={{ delay: i * 0.1, duration: 0.7, ease }}>
+                  <span className="pain-index">0{i + 1}</span><Icon /><h3>{title}</h3><p>{body}</p>
                 </motion.article>
               );
             })}
           </div>
-          <div className="problem-footer"><span>Confusion</span><ArrowRight /><span>Delay</span><ArrowRight /><span>Risk</span><ArrowRight /><strong>There had to be a better route.</strong></div>
+          <div className="problem-footer">
+            <span>{t.problemFooter[0]}</span><ArrowRight /><span>{t.problemFooter[1]}</span><ArrowRight /><span>{t.problemFooter[2]}</span><ArrowRight /><strong>{t.problemFooter[3]}</strong>
+          </div>
         </section>
 
         <section className="origin scene">
           <div className="origin-sticky">
-            <SceneHeading eyebrow="03 — The origin" title="Why a Telegram" accent="Mini App?" body="The dream was to digitise Ta’aruf Week. The first obstacle was not technology—it was access." />
+            <SceneHeading eyebrow={t.originEyebrow} title={t.originTitle} accent={t.originAccent} body={t.originBody} />
           </div>
           <div className="origin-story">
-            <motion.article variants={reveal} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-              <span className="story-step">01 / THE BARRIER</span>
-              <CircleDollarSign />
-              <h3>RM500 before the first student.</h3>
-              <p>App Store and Play Store deployment fees create a needless barrier for a student-built community tool.</p>
-            </motion.article>
-            <motion.article variants={reveal} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-              <span className="story-step">02 / THE PIVOT</span>
-              <MessageCircleMore />
-              <h3>The super app was already installed.</h3>
-              <p>Telegram already held the audience, identity and daily communication layer. No forced download required.</p>
-            </motion.article>
-            <motion.article className="story-final" variants={reveal} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-              <span className="story-step">03 / THE REALITY</span>
-              <Rocket />
-              <h3>Passion became production.</h3>
-              <p>A student idea matured into a fast, secure and deployed operational platform.</p>
-            </motion.article>
+            {t.originSteps.map(([step, title, body], i) => {
+              const Icon = [CircleDollarSign, MessageCircleMore, Rocket][i];
+              return (
+                <motion.article key={step} className={i === 2 ? "story-final" : undefined} variants={reveal} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+                  <span className="story-step">{step}</span>
+                  <Icon />
+                  <h3>{title}</h3>
+                  <p>{body}</p>
+                </motion.article>
+              );
+            })}
           </div>
         </section>
 
         <section className="solution scene" id="solution">
           <div className="solution-wash" />
-          <SceneHeading eyebrow="04 — The solution" title="No install. No sign-up." accent="No friction." body="Runs entirely inside Telegram—a direct path from announcement to action." center />
+          <SceneHeading eyebrow={t.solutionEyebrow} title={t.solutionTitle} accent={t.solutionAccent} body={t.solutionBody} center />
           <div className="solution-layout">
             <motion.div className="solution-feature one" variants={reveal} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-              <CalendarRange /><strong>53</strong><h3>Real events</h3><p>An interactive timeline understands past, now and next.</p>
+              <CalendarRange /><strong>{t.solFeatures[0][0]}</strong><h3>{t.solFeatures[0][1]}</h3><p>{t.solFeatures[0][2]}</p>
             </motion.div>
             <motion.div initial={reduceMotion ? false : { opacity: 0, y: 80 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 1, ease }}>
-              <PhoneVisual src="/assets/showcase/schedule.png" alt="TawePro interactive event schedule" className="solution-phone" />
+              <PhoneVisual src="/assets/showcase/schedule.png" alt="TawePro IIUM Ta'aruf Week schedule" className="solution-phone" />
             </motion.div>
             <motion.div className="solution-feature two" variants={reveal} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-              <LocateFixed /><strong>200m</strong><h3>GPS verification</h3><p>Presence is confirmed at the venue—not on a paper card.</p>
+              <LocateFixed /><strong>{t.solFeatures[1][0]}</strong><h3>{t.solFeatures[1][1]}</h3><p>{t.solFeatures[1][2]}</p>
             </motion.div>
             <motion.div className="solution-feature three" variants={reveal} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-              <BellRing /><strong>Live</strong><h3>Emergency broadcasts</h3><p>Critical changes reach the right people at the right moment.</p>
+              <BellRing /><strong>{t.solFeatures[2][0]}</strong><h3>{t.solFeatures[2][1]}</h3><p>{t.solFeatures[2][2]}</p>
             </motion.div>
           </div>
         </section>
 
         <section className="walkthrough scene">
-          <SceneHeading eyebrow="05 — Student walkthrough" title="From first arrival" accent="to the final ceremony." body="One continuous journey. Every screen knows what the student needs next." />
+          <SceneHeading eyebrow={t.walkEyebrow} title={t.walkTitle} accent={t.walkAccent} body={t.walkBody} />
           <div className="walk-track">
             <motion.div className="walk-phone p1" initial={reduceMotion ? false : { opacity: 0, x: -100, rotate: -8 }} whileInView={{ opacity: 1, x: 0, rotate: -5 }} viewport={{ once: true }} transition={{ duration: 0.9, ease }}>
               <PhoneVisual src="/assets/showcase/dashboard.png" alt="Student dashboard" />
-              <span><b>01</b> Open instantly</span>
+              <span><b>01</b> {t.walkSteps[0]}</span>
             </motion.div>
             <motion.div className="walk-phone p2" initial={reduceMotion ? false : { opacity: 0, y: 120 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.9, delay: 0.1, ease }}>
               <PhoneVisual src="/assets/showcase/map.png" alt="Campus route navigation" />
-              <span><b>02</b> Find the route</span>
+              <span><b>02</b> {t.walkSteps[1]}</span>
             </motion.div>
             <motion.div className="walk-phone p3" initial={reduceMotion ? false : { opacity: 0, x: 100, rotate: 8 }} whileInView={{ opacity: 1, x: 0, rotate: 5 }} viewport={{ once: true }} transition={{ duration: 0.9, delay: 0.2, ease }}>
               <PhoneVisual src="/assets/showcase/checkin.png" alt="GPS attendance and reward tracking" />
-              <span><b>03</b> Verify arrival</span>
+              <span><b>03</b> {t.walkSteps[2]}</span>
             </motion.div>
           </div>
           <div className="walk-route"><i /><i /><i /></div>
         </section>
 
         <section className="audiences scene">
-          <SceneHeading eyebrow="06 — Four views, one system" title="One platform serving" accent="four audiences." body="Each role sees a focused surface. Together, they create one reliable operational picture." />
+          <SceneHeading eyebrow={t.audEyebrow} title={t.audTitle} accent={t.audAccent} body={t.audBody} />
           <div className="role-shell">
             <div className="role-tabs" role="tablist" aria-label="TawePro audiences">
-              {roles.map((role, i) => <button key={role.title} role="tab" aria-selected={activeRole === i} onClick={() => setActiveRole(i)}><span>{role.tag}</span>{role.title}</button>)}
+              {t.roles.map((role, i) => (
+                <button key={role.title} role="tab" aria-selected={activeRole === i} onClick={() => setActiveRole(i)}>
+                  <span>{role.tag}</span>{role.title}
+                </button>
+              ))}
             </div>
-            <motion.div className={`role-detail ${roles[activeRole].color}`} key={activeRole} initial={reduceMotion ? false : { opacity: 0, x: 35 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.45, ease }}>
-              {(() => { const Icon = roles[activeRole].icon; return <Icon />; })()}
-              <span>{roles[activeRole].tag} / AUDIENCE</span>
-              <h3>{roles[activeRole].title}</h3>
-              <p>{roles[activeRole].copy}</p>
+            <motion.div className={`role-detail ${["cyan", "gold", "coral", "lime"][activeRole]}`} key={`${lang}-${activeRole}`} initial={reduceMotion ? false : { opacity: 0, x: 35 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.45, ease }}>
+              {(() => { const Icon = roleIcons[activeRole]; return <Icon />; })()}
+              <span>{t.roles[activeRole].tag} / AUDIENCE</span>
+              <h3>{t.roles[activeRole].title}</h3>
+              <p>{t.roles[activeRole].copy}</p>
               <div><Check /> Role-aware access <Check /> One shared truth</div>
             </motion.div>
           </div>
         </section>
 
         <section className="architecture scene">
-          <SceneHeading eyebrow="07 — Under the surface" title="Production-ready" accent="architecture." body="Enterprise-grade foundations, composed for performance, security and scale." center />
+          <SceneHeading eyebrow={t.archEyebrow} title={t.archTitle} accent={t.archAccent} body={t.archBody} center />
           <div className="stack-grid">
-            {stack.map(({ icon: Icon, label, title, copy }, i) => (
+            {stack.map(({ icon: Icon, label, title, copy: stackCopy }, i) => (
               <motion.article key={title} variants={reveal} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.09, duration: 0.7, ease }}>
-                <div><Icon /><span>{label}</span></div><h3>{title}</h3><p>{copy}</p><small>0{i + 1}</small>
+                <div><Icon /><span>{label}</span></div><h3>{title}</h3><p>{stackCopy}</p><small>0{i + 1}</small>
               </motion.article>
             ))}
           </div>
@@ -356,8 +656,8 @@ function App() {
 
         <section className="command scene">
           <div className="command-copy">
-            <SceneHeading eyebrow="08 — Committee command center" title="Eight bureaus." accent="One pulse." body="Every operational team keeps its own focus while sharing the same live system." />
-            <div className="tool-count"><strong>19</strong><span>operational tools</span></div>
+            <SceneHeading eyebrow={t.cmdEyebrow} title={t.cmdTitle} accent={t.cmdAccent} body={t.cmdBody} />
+            <div className="tool-count"><strong>19</strong><span>{t.tools}</span></div>
           </div>
           <motion.div className="bureau-orbit" initial={reduceMotion ? false : { opacity: 0, scale: 0.75 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 1, ease }}>
             <div className="orbit-center"><img src="/assets/iium-logo.png" alt="" /><strong>MAINBOARD</strong><span>command layer</span></div>
@@ -367,17 +667,16 @@ function App() {
         </section>
 
         <section className="impact scene" id="proof">
-          <SceneHeading eyebrow="09 — Impact & scalability" title="Proven in production." accent="Ready for what’s next." body="The platform has already crossed the line between prototype and dependable infrastructure." />
+          <SceneHeading eyebrow={t.impactEyebrow} title={t.impactTitle} accent={t.impactAccent} body={t.impactBody} />
           <motion.div className="metrics-grid" initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.25 }} transition={{ staggerChildren: 0.12 }}>
-            <Metric value="50+" label="concurrent sessions" detail="with GPS verification" />
-            <Metric value="8" label="active bureaus" detail="sharing 19 operational tools" />
-            <Metric value="≈0" label="installation friction" detail="inside Telegram" />
-            <Metric value="≈0" label="starting infra cost" detail="built to prove value first" />
+            {t.metrics.map(([value, label, detail]) => (
+              <Metric key={label} value={value} label={label} detail={detail} />
+            ))}
           </motion.div>
         </section>
 
         <section className="testing scene">
-          <SceneHeading eyebrow="10 — Tested for the real world" title="Load tested." accent="Security hardened." body="Not just designed to look ready—engineered to stay ready under real pressure." center />
+          <SceneHeading eyebrow={t.testEyebrow} title={t.testTitle} accent={t.testAccent} body={t.testBody} center />
           <div className="test-dashboard">
             <motion.div className="test-primary" variants={reveal} initial="hidden" whileInView="visible" viewport={{ once: true }}>
               <div className="test-ring"><strong>1,000</strong><span>concurrent users</span></div>
@@ -400,7 +699,7 @@ function App() {
         </section>
 
         <section className="upgrade scene">
-          <SceneHeading eyebrow="11 — The upgrade path" title="Scaling for" accent="4,500+ students." body="Success raises the ceiling. The next deployment has two practical routes." />
+          <SceneHeading eyebrow={t.upgradeEyebrow} title={t.upgradeTitle} accent={t.upgradeAccent} body={t.upgradeBody} />
           <div className="ceiling">
             <span>FREE-TIER CEILING</span><strong>2.7M</strong><p>projected requests against a 1M limit</p><div><i /></div>
           </div>
@@ -417,8 +716,8 @@ function App() {
 
         <section className="wellbeing scene">
           <div className="wellbeing-copy">
-            <SceneHeading eyebrow="12 — Technology with care" title="Operations are human." accent="Support should be too." body="TawePro keeps wellbeing reporting and assistance close to the student journey—not hidden in another system." />
-            <div className="care-note"><HeartHandshake /><span><strong>A protected route to help.</strong> Clear reporting, emergency contacts and trackable follow-through.</span></div>
+            <SceneHeading eyebrow={t.careEyebrow} title={t.careTitle} accent={t.careAccent} body={t.careBody} />
+            <div className="care-note"><HeartHandshake /><span><strong>{t.careNote}</strong> {t.careNoteBody}</span></div>
           </div>
           <motion.div initial={reduceMotion ? false : { opacity: 0, rotate: 5, y: 80 }} whileInView={{ opacity: 1, rotate: 2, y: 0 }} viewport={{ once: true }} transition={{ duration: 1, ease }}>
             <PhoneVisual src="/assets/showcase/wellbeing.png" alt="TawePro wellbeing concern form" />
@@ -426,7 +725,7 @@ function App() {
         </section>
 
         <section className="reviews scene" id="reviews">
-          <SceneHeading eyebrow="13 — Frontline feedback" title="Built with the community." accent="Loved by the community." body="Unfiltered reactions from the people closest to Ta’aruf Week." center />
+          <SceneHeading eyebrow={t.revEyebrow} title={t.revTitle} accent={t.revAccent} body={t.revBody} center />
           <div className="marquee-shell">
             <div className={`review-track${reduceMotion ? " reduced" : ""}`}>
               {reviewsLoop.map(([quote, author, tag], i) => (
@@ -442,27 +741,39 @@ function App() {
           <div className="review-summary"><span><strong>11</strong> real voices</span><i /><span><strong>1</strong> shared reaction</span><i /><span className="review-shout">GEMPAK.</span></div>
         </section>
 
+        <section className="faq scene" id="faq">
+          <SceneHeading eyebrow={t.faqEyebrow} title={t.faqTitle} accent={t.faqAccent} body={t.faqBody} />
+          <div className="faq-grid">
+            {t.faqs.map(([q, a], i) => (
+              <motion.article key={q} variants={reveal} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ delay: i * 0.08, duration: 0.7, ease }}>
+                <h3>{q}</h3>
+                <p>{a}</p>
+              </motion.article>
+            ))}
+          </div>
+        </section>
+
         <section className="final-cta scene">
           <div className="final-grid" />
           <motion.div className="final-mark" initial={reduceMotion ? false : { scale: 0.5, opacity: 0, rotate: -20 }} whileInView={{ scale: 1, opacity: 1, rotate: 0 }} viewport={{ once: true }} transition={{ duration: 1, ease }}>
             <img src="/assets/iium-logo.png" alt="" />
           </motion.div>
           <motion.div className="final-content" variants={reveal} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-            <span className="eyebrow"><i />14 — The invitation</span>
-            <h2>Let’s transform<br /><em>orientation together.</em></h2>
-            <p>We request IIUM’s endorsement to deploy Ta’aruf Week Pro for the 3,000 incoming students.</p>
+            <span className="eyebrow"><i />{t.finalEyebrow}</span>
+            <h2>{t.finalTitle}<br /><em>{t.finalAccent}</em></h2>
+            <p>{t.finalBody}</p>
             <div className="value-pillars">
-              <span><CircleDollarSign /> Zero cost to deploy</span>
-              <span><Zap /> Zero training needed</span>
-              <span><GraduationCap /> Built by students</span>
+              <span><CircleDollarSign /> {t.pillars[0]}</span>
+              <span><Zap /> {t.pillars[1]}</span>
+              <span><GraduationCap /> {t.pillars[2]}</span>
             </div>
             <div className="final-actions">
-              <a className="button light" href={TELEGRAM_URL} target="_blank" rel="noreferrer"><Send /> Open Telegram bot <ExternalLink /></a>
-              <a className="button outline" href={APP_URL} target="_blank" rel="noreferrer"><Rocket /> View live app <ExternalLink /></a>
+              <a className="button light" href={TELEGRAM_URL} target="_blank" rel="noreferrer"><Send /> {t.finalTg} <ExternalLink /></a>
+              <a className="button outline" href={APP_URL} target="_blank" rel="noreferrer"><Rocket /> {t.finalApp} <ExternalLink /></a>
             </div>
           </motion.div>
           <div className="final-route" aria-hidden="true"><Route /><span /><span /><span /></div>
-          <footer className="deck-footer"><span>TAWEPRO · JULY 2026</span><span>BUILT AT IIUM, FOR IIUM</span><a href="#top">Back to top ↑</a></footer>
+          <footer className="deck-footer"><span>{t.footer[0]}</span><span>{t.footer[1]}</span><a href="#top">{t.footer[2]}</a></footer>
         </section>
       </main>
     </div>
