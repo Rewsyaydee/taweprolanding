@@ -328,3 +328,116 @@ img { max-width: 100%; display: block; }
     min-height: 202px;
   }
 }
+
+/* =============================================
+   Testimonial wall refinement — centered window
+   Compact cards, slower movement, generous air.
+   ============================================= */
+.reviews {
+  padding-inline: clamp(18px, 5vw, 96px);
+}
+.reviews .scene-heading {
+  max-width: 760px;
+  margin-inline: auto;
+}
+.marquee-shell {
+  width: min(1120px, 100%);
+  margin: 0 auto;
+  padding: 3.25rem 0 3.75rem;
+}
+.marquee-wall {
+  gap: .85rem;
+}
+.marquee-row {
+  gap: .85rem;
+  animation-duration: 36s;
+}
+.marquee-row.row-2 {
+  animation-duration: 43s;
+}
+.marquee-row.row-3 {
+  animation-duration: 39s;
+}
+.marquee-row > .review,
+.marquee-row.row-2 > .review,
+.marquee-row.row-3 > .review,
+.marquee-row > .review-featured {
+  width: clamp(224px, 20vw, 286px);
+  min-height: 152px;
+  padding: 18px;
+  border-radius: 16px;
+}
+.marquee-row.row-2 > .review {
+  min-height: 174px;
+}
+.marquee-row.row-3 > .review {
+  min-height: 148px;
+}
+.marquee-row > .review-featured {
+  min-height: 198px;
+}
+.marquee-row .review-stars {
+  font-size: 9px;
+  letter-spacing: .12em;
+}
+.marquee-row .review > span {
+  margin-top: 14px;
+  font-size: 8px;
+  letter-spacing: .1em;
+}
+.marquee-row .review blockquote {
+  margin: 13px 0;
+  font-size: clamp(14px, 1.15vw, 17px);
+  line-height: 1.38;
+  letter-spacing: -.025em;
+}
+.marquee-row .review footer {
+  gap: 8px;
+}
+.marquee-row .review footer > i {
+  width: 28px;
+  height: 28px;
+  font-size: 11px;
+}
+.marquee-row .review footer strong {
+  font-size: 10px;
+}
+.marquee-row .review footer small {
+  font-size: 8px;
+}
+.review-summary {
+  margin-top: 30px;
+}
+@media (max-width: 760px) {
+  .reviews {
+    padding-inline: 12px;
+  }
+  .marquee-shell {
+    width: 100%;
+    padding: 2.25rem 0 2.75rem;
+  }
+  .marquee-row {
+    gap: .65rem;
+    animation-duration: 31s;
+  }
+  .marquee-row.row-2 {
+    animation-duration: 37s;
+  }
+  .marquee-row.row-3 {
+    animation-duration: 34s;
+  }
+  .marquee-row > .review,
+  .marquee-row.row-2 > .review,
+  .marquee-row.row-3 > .review,
+  .marquee-row > .review-featured {
+    width: min(68vw, 258px);
+    min-height: 146px;
+    padding: 16px;
+  }
+  .marquee-row.row-2 > .review {
+    min-height: 166px;
+  }
+  .marquee-row > .review-featured {
+    min-height: 186px;
+  }
+}
