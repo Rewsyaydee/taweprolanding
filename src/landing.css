@@ -441,3 +441,23 @@ img { max-width: 100%; display: block; }
     min-height: 186px;
   }
 }
+
+/* Featured review contrast: keep the dark highlight fully readable. */
+.marquee-row > .review-featured,
+.marquee-row > .review-featured blockquote,
+.marquee-row > .review-featured footer strong {
+  color: var(--cream);
+}
+.marquee-row > .review-featured .review-stars {
+  color: var(--gold);
+}
+.marquee-row > .review-featured > span {
+  color: rgba(232, 199, 120, .88);
+}
+.marquee-row > .review-featured footer small {
+  color: rgba(241, 230, 207, .62);
+}
+.marquee-row > .review-featured footer > i {
+  background: var(--gold);
+  color: var(--green);
+}
