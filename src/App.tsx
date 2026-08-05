@@ -407,10 +407,10 @@ function App() {
   const smoothProgress = useSpring(scrollYProgress, { stiffness: 90, damping: 25, mass: 0.25 });
   const heroY = useTransform(scrollYProgress, [0, 0.12], [0, reduceMotion ? 0 : 180]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.09], [1, 0]);
-  const columns = useMemo(() => {
-    const cols: string[][][] = [[], [], [], []];
-    reviews.forEach((r, i) => cols[i % 4].push(r));
-    return cols.map((col) => [...col, ...col]);
+  const reviewRows = useMemo(() => {
+    const rows: string[][][] = [[], [], []];
+    reviews.forEach((review, index) => rows[index % 3].push(review));
+    return rows.map((row) => [...row, ...row]);
   }, []);
   const t = copy[lang];
 
@@ -738,11 +738,11 @@ function App() {
         <section className="reviews scene" id="reviews">
           <SceneHeading eyebrow={t.revEyebrow} title={t.revTitle} accent={t.revAccent} body={t.revBody} center />
           <div className="marquee-shell">
-            <div className={`marquee-grid${reduceMotion ? " reduced" : ""}`}>
-              {columns.map((col, ci) => (
-                <div className="marquee-col" key={`col-${ci}`}>
-                  {col.map(([quote, author, tag], i) => (
-                    <article className="review" key={`${author}-${ci}-${i}`} aria-hidden={i >= col.length / 2}>
+            <div className={`marquee-wall${reduceMotion ? " reduced" : ""}`}>
+              {reviewRows.map((row, rowIndex) => (
+                <div className={`marquee-row row-${rowIndex + 1}`} key={`row-${rowIndex}`}>
+                  {row.map(([quote, author, tag], i) => (
+                    <article className={`review${rowIndex === 1 && i === 2 ? " review-featured" : ""}`} key={`${author}-${rowIndex}-${i}`} aria-hidden={i >= row.length / 2}>
                       <div className="review-stars">★★★★★</div>
                       <span>{tag}</span>
                       <blockquote>“{quote}”</blockquote>
