@@ -55,7 +55,7 @@ const reveal = {
   visible: { opacity: 1, y: 0 },
 };
 
-const reviews = [
+const reviews = const reviews = [
   ["Senang kerja kita man, tolak satu jobscope 🖐🏽... sorry do syedi demand macam2 😅 sebab gempak wehhh", "Aliya Maisarah Tawe", "Efficiency & quality"],
   ["STYLEEE GILAAA WEIHHHH! I is amazeeeeddddd! AKU DAA EXCITED DARI TADI", "Ilyanie Tawe", "The wow factor"],
   ["OKEH BAPAK STYLEEEEEEEEEEE 😂", "Ilyanie Tawe", "Design & UI"],
@@ -67,6 +67,13 @@ const reviews = [
   ["Perghhh, Niceee doo. Ni kau buat kee", "Eggy Careg", "Genuine amazement"],
   ["wahwahwah, ok hebat menarik", "Nurin Welwel Tawe", "Clean functionality"],
   ["Weah syedii sgt membantu wei 🥹🥹🥹 Dia cam tersusun gak skit kerja ii", "Arep PC Tawe", "Organization & practicality"],
+  ["anjaiii style gilaa, ada miniapp bhaii, pehhh semat do, bawak masuk ni dlaam resume", "Elyas Server Mod", "Portfolio-worthy quality"],
+  ["bagi aku kalau utk app tu, yg paling menarik perhatian is the fact that yg kitorang tak perlu download but kat tele je... tele kan is the app semua org ada, so much easier to access", "Harizah Careg", "No app download needed"],
+  ["kalau utk student, bagi aku schedule ngan map tu paling function — since schedule tu dah specific kan ke hari... bila tengok app ni, aku rasa new students dah senang nak tahu jalan mana ke mana gituu", "Harizah Careg", "Value for new students"],
+  ["kalau utk committee tu, punch card ngan task tu paling tip top — since kadang2 en bila dah group tu rancak, so susah nak cari task2 yg head bureau bagi... tapi yg ni dah ada specific place utk tengok, so it's much more easier ahh", "Harizah Careg", "Value for the committee"],
+  ["YANG NIII 😭😭😭 WEYH, KENAPA KAU TAKDE TIME AKU TAWEEEE. PALING FUNCTION TERUK AH MAP TUUU", "Harizah Careg", "Regret it came late"],
+  ["cool siaaa ❤️ Aku suka part schedule tu, cantik. And aku rasa kalau betul2 diorg nak pakai, yang clock in clock out features tu pon best", "@tinanananananananana", "Design & core features"],
+  ["menarik... nk code utk committee acess... Mcm nk involve gak", "Hannan Ex Program Manager Tawe", "High demand & interest"],
 ];
 
 const copy = {
@@ -400,7 +407,11 @@ function App() {
   const smoothProgress = useSpring(scrollYProgress, { stiffness: 90, damping: 25, mass: 0.25 });
   const heroY = useTransform(scrollYProgress, [0, 0.12], [0, reduceMotion ? 0 : 180]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.09], [1, 0]);
-  const reviewsLoop = useMemo(() => [...reviews, ...reviews], []);
+  const columns = useMemo(() => {
+    const cols: string[][][] = [[], [], [], []];
+    reviews.forEach((r, i) => cols[i % 4].push(r));
+    return cols.map((col) => [...col, ...col]);
+  }, []);
   const t = copy[lang];
 
   useMotionValueEvent(scrollYProgress, "change", (value) => setScrollPercent(Math.round(value * 100)));
@@ -727,18 +738,22 @@ function App() {
         <section className="reviews scene" id="reviews">
           <SceneHeading eyebrow={t.revEyebrow} title={t.revTitle} accent={t.revAccent} body={t.revBody} center />
           <div className="marquee-shell">
-            <div className={`review-track${reduceMotion ? " reduced" : ""}`}>
-              {reviewsLoop.map(([quote, author, tag], i) => (
-                <article className="review" key={`${author}-${i}`}>
-                  <div className="review-stars">★★★★★</div>
-                  <span>{tag}</span>
-                  <blockquote>“{quote}”</blockquote>
-                  <footer><i>{author.charAt(0)}</i><div><strong>{author}</strong><small>TawePro testing phase</small></div></footer>
-                </article>
+            <div className={`marquee-grid${reduceMotion ? " reduced" : ""}`}>
+              {columns.map((col, ci) => (
+                <div className="marquee-col" key={`col-${ci}`}>
+                  {col.map(([quote, author, tag], i) => (
+                    <article className="review" key={`${author}-${ci}-${i}`} aria-hidden={i >= col.length / 2}>
+                      <div className="review-stars">★★★★★</div>
+                      <span>{tag}</span>
+                      <blockquote>“{quote}”</blockquote>
+                      <footer><i>{author.charAt(0)}</i><div><strong>{author}</strong><small>TawePro testing phase</small></div></footer>
+                    </article>
+                  ))}
+                </div>
               ))}
             </div>
           </div>
-          <div className="review-summary"><span><strong>11</strong> real voices</span><i /><span><strong>1</strong> shared reaction</span><i /><span className="review-shout">GEMPAK.</span></div>
+          <div className="review-summary"><span><strong>18</strong> real voices</span><i /><span><strong>1</strong> shared reaction</span><i /><span className="review-shout">GEMPAK.</span></div>
         </section>
 
         <section className="faq scene" id="faq">
