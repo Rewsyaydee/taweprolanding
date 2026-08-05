@@ -55,7 +55,7 @@ const reveal = {
   visible: { opacity: 1, y: 0 },
 };
 
-const reviews = const reviews = [
+const reviews = [
   ["Senang kerja kita man, tolak satu jobscope 🖐🏽... sorry do syedi demand macam2 😅 sebab gempak wehhh", "Aliya Maisarah Tawe", "Efficiency & quality"],
   ["STYLEEE GILAAA WEIHHHH! I is amazeeeeddddd! AKU DAA EXCITED DARI TADI", "Ilyanie Tawe", "The wow factor"],
   ["OKEH BAPAK STYLEEEEEEEEEEE 😂", "Ilyanie Tawe", "Design & UI"],
