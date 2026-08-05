@@ -235,3 +235,62 @@ img { max-width: 100%; display: block; }
   .faq-grid article{min-height:auto;padding:22px}
   .hero h1{font-size:clamp(42px,12vw,70px);line-height:.9}
 }
+
+
+/* =============================================
+   Customer reviews — infinite masonry marquee
+   (ngrok-style multi-column, opposite directions,
+   pause on hover, reduced-motion aware)
+   ============================================= */
+.marquee-shell {
+  max-width: 100%;
+  overflow: hidden;
+  padding: 2rem 0 1rem;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 4%, #000 96%, transparent);
+          mask-image: linear-gradient(to bottom, transparent, #000 4%, #000 96%, transparent);
+}
+.marquee-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+.marquee-col {
+  display: flex;
+  flex-direction: column;
+  animation: marqueeScroll 13s linear infinite;
+  will-change: transform;
+}
+.marquee-col:nth-child(2) {
+  animation-duration: 17s;
+  animation-direction: reverse;
+}
+.marquee-col:nth-child(3) {
+  animation-duration: 11s;
+}
+.marquee-col:nth-child(4) {
+  animation-duration: 15s;
+  animation-direction: reverse;
+}
+.marquee-col > * {
+  flex: 0 0 auto;
+  margin-bottom: 1.25rem;
+}
+.marquee-shell:hover .marquee-col {
+  animation-play-state: paused;
+}
+.marquee-grid.reduced .marquee-col {
+  animation: none;
+}
+@keyframes marqueeScroll {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-50%); }
+}
+@media (max-width: 1023px) {
+  .marquee-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 479px) {
+  .marquee-grid { grid-template-columns: 1fr; }
+}
