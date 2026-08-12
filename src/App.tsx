@@ -635,12 +635,23 @@ function App() {
   const heroY = useTransform(scrollYProgress, [0, 0.12], [0, reduceMotion ? 0 : 180]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.09], [1, 0]);
   const socialProof = useSupabaseSocialProof();
-  const activeReviews = useMemo<ReviewTuple[]>(
-    () => socialProof.liveReviews.length
-      ? socialProof.liveReviews.map((review) => [review.quote, review.author, review.tag])
-      : fallbackReviews,
-    [socialProof.liveReviews],
-  );
+  const activeReviews = useMemo<ReviewTuple[]>(() => {
+    // Keep the original 18 testing-phase voices permanently visible.
+    // Approved Supabase reviews are additive and appear after the local voices.
+    const seen = new Set(
+      fallbackReviews.map(([quote, author]) => `${quote}\\u0000${author}`),
+    );
+    const appendedLiveReviews = socialProof.liveReviews
+      .map((review): ReviewTuple => [review.quote, review.author, review.tag])
+      .filter(([quote, author]) => {
+        const key = `${quote}\\u0000${author}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+
+    return [...fallbackReviews, ...appendedLiveReviews];
+  }, [socialProof.liveReviews]);
   const reviewRows = useMemo(() => {
     const rows: ReviewTuple[][] = [[], [], []];
     activeReviews.forEach((review, index) => rows[index % 3].push(review));
