@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { createClient } from "@supabase/supabase-js";
 import {
   motion,
   useMotionValueEvent,
@@ -55,7 +56,7 @@ const reveal = {
   visible: { opacity: 1, y: 0 },
 };
 
-const reviews = [
+const fallbackReviews = [
   ["Senang kerja kita man, tolak satu jobscope 🖐🏽... sorry do syedi demand macam2 😅 sebab gempak wehhh", "Aliya Maisarah Tawe", "Efficiency & quality"],
   ["STYLEEE GILAAA WEIHHHH! I is amazeeeeddddd! AKU DAA EXCITED DARI TADI", "Ilyanie Tawe", "The wow factor"],
   ["OKEH BAPAK STYLEEEEEEEEEEE 😂", "Ilyanie Tawe", "Design & UI"],
@@ -75,6 +76,232 @@ const reviews = [
   ["cool siaaa ❤️ Aku suka part schedule tu, cantik. And aku rasa kalau betul2 diorg nak pakai, yang clock in clock out features tu pon best", "@tinanananananananana", "Design & core features"],
   ["menarik... nk code utk committee acess... Mcm nk involve gak", "Hannan Ex Program Manager Tawe", "High demand & interest"],
 ];
+
+
+type ReviewTuple = [string, string, string];
+
+type LiveReview = {
+  id: string;
+  quote: string;
+  author: string;
+  tag: string;
+  rating: number | null;
+};
+
+const SUPABASE_URL = "https://uyvmuvsvvclyntaprxrr.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV5dm11dnN2dmNseW50YXByeHJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMzMjE0NjMsImV4cCI6MjA5ODg5NzQ2M30.NLIDxmtZBnm4RShKWkuj6aOcErkERUMtrVrAgNDKlm4";
+
+function getSupabaseConfig() {
+  const env = ((import.meta as ImportMeta & {
+    env?: Record<string, string | undefined>;
+  }).env ?? {});
+
+  return {
+    url: env.VITE_SUPABASE_URL || SUPABASE_URL,
+    key: env.VITE_SUPABASE_ANON_KEY || SUPABASE_ANON_KEY,
+  };
+}
+
+function normalizeLiveReview(row: Record<string, unknown>): LiveReview | null {
+  if (!row.id || typeof row.content !== "string" || !row.content.trim()) return null;
+
+  const rating = typeof row.rating === "number"
+    ? row.rating
+    : typeof row.rating === "string" && row.rating.trim()
+      ? Number(row.rating)
+      : null;
+
+  return {
+    id: String(row.id),
+    quote: row.content.trim(),
+    author: typeof row.display_name === "string" && row.display_name.trim()
+      ? row.display_name.trim()
+      : "Anonymous",
+    tag: "Community review",
+    rating: Number.isFinite(rating) ? rating : null,
+  };
+}
+
+function parsePublicCount(value: unknown): number | null {
+  const row = Array.isArray(value) ? value[0] : value;
+  const candidate = row && typeof row === "object" && "count" in row
+    ? (row as { count?: unknown }).count
+    : row;
+
+  const number = typeof candidate === "number" ? candidate : Number(candidate);
+  return Number.isFinite(number) && number >= 0 ? number : null;
+}
+
+function countOnlinePresence(state: Record<string, unknown>) {
+  return Object.values(state).filter((entries) => {
+    if (!Array.isArray(entries)) return false;
+    return entries.some((entry) => (
+      entry &&
+      typeof entry === "object" &&
+      (entry as { online?: unknown }).online === true
+    ));
+  }).length;
+}
+
+function useSupabaseSocialProof() {
+  const [onlineUsers, setOnlineUsers] = useState<number | null>(null);
+  const [totalUsers, setTotalUsers] = useState<number | null>(null);
+  const [liveReviews, setLiveReviews] = useState<LiveReview[]>([]);
+  const [reviewStatus, setReviewStatus] = useState<"loading" | "live" | "offline">("loading");
+
+  useEffect(() => {
+    let mounted = true;
+    const config = getSupabaseConfig();
+    const client = createClient(config.url, config.key, {
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
+
+    const updatePresence = (channel: ReturnType<typeof client.channel>) => {
+      if (mounted) {
+        setOnlineUsers(countOnlinePresence(
+          channel.presenceState() as Record<string, unknown>
+        ));
+      }
+    };
+
+    const reviewsChannel = client
+      .channel("landing-approved-reviews")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "reviews" },
+        (payload) => {
+          if (!mounted) return;
+
+          const eventType = payload.eventType;
+          if (eventType === "DELETE") {
+            const deletedId = String((payload.old as { id?: unknown }).id ?? "");
+            if (deletedId) {
+              setLiveReviews((current) => current.filter((review) => review.id !== deletedId));
+            }
+            return;
+          }
+
+          const row = payload.new as Record<string, unknown>;
+          const next = normalizeLiveReview(row);
+
+          setLiveReviews((current) => {
+            const existingIndex = current.findIndex((review) => review.id === String(row.id));
+            if (!next) {
+              return current.filter((review) => review.id !== String(row.id));
+            }
+            if (existingIndex < 0) return [...current, next];
+
+            const updated = [...current];
+            updated[existingIndex] = next;
+            return updated;
+          });
+        },
+      )
+      .subscribe((status) => {
+        if (!mounted) return;
+        if (status === "SUBSCRIBED") setReviewStatus("live");
+        if (status === "CHANNEL_ERROR" || status === "TIMED_OUT" || status === "CLOSED") {
+          setReviewStatus("offline");
+        }
+      });
+
+    const presenceChannel = client
+      .channel("online-users", { config: { presence: { key: "landing-observer" } } })
+      .on("presence", { event: "sync" }, () => updatePresence(presenceChannel))
+      .on("presence", { event: "join" }, () => updatePresence(presenceChannel))
+      .on("presence", { event: "leave" }, () => updatePresence(presenceChannel))
+      .subscribe((status) => {
+        if (status === "SUBSCRIBED") updatePresence(presenceChannel);
+        if (status === "CHANNEL_ERROR" || status === "TIMED_OUT" || status === "CLOSED") {
+          if (mounted) setOnlineUsers(null);
+        }
+      });
+
+    const loadPublicData = async () => {
+      const [reviewsResult, countResult] = await Promise.all([
+        client
+          .from("reviews")
+          .select("id, display_name, content, rating, is_approved, created_at")
+          .eq("is_approved", true)
+          .order("created_at", { ascending: false })
+          .limit(50),
+        client.rpc("get_public_user_count"),
+      ]);
+
+      if (!mounted) return;
+
+      if (!reviewsResult.error) {
+        const normalized = (reviewsResult.data ?? [])
+          .map((row) => normalizeLiveReview(row as Record<string, unknown>))
+          .filter((review): review is LiveReview => Boolean(review));
+        setLiveReviews(normalized);
+        setReviewStatus("live");
+      } else {
+        setReviewStatus("offline");
+      }
+
+      if (!countResult.error) {
+        setTotalUsers(parsePublicCount(countResult.data));
+      } else {
+        setTotalUsers(null);
+      }
+    };
+
+    void loadPublicData();
+
+    return () => {
+      mounted = false;
+      void client.removeChannel(reviewsChannel);
+      void client.removeChannel(presenceChannel);
+    };
+  }, []);
+
+  return { onlineUsers, totalUsers, liveReviews, reviewStatus };
+}
+
+function formatMetric(value: number | null) {
+  return value === null ? "—" : value.toLocaleString();
+}
+
+function LiveProofBand({
+  lang,
+  onlineUsers,
+  totalUsers,
+  reviewStatus,
+}: {
+  lang: Lang;
+  onlineUsers: number | null;
+  totalUsers: number | null;
+  reviewStatus: "loading" | "live" | "offline";
+}) {
+  const isMs = lang === "ms";
+  const isConnected = reviewStatus === "live";
+
+  return (
+    <div className="live-proof-band" aria-label={isMs ? "Bukti langsung TawePro" : "Live TawePro proof"}>
+      <div className="live-proof-intro">
+        <span className={`live-signal${isConnected ? " is-live" : ""}`} aria-hidden="true" />
+        <div>
+          <strong>{isMs ? "LIVE DARI TAWEPRO" : "LIVE FROM TAWEPRO"}</strong>
+          <small>
+            {isConnected
+              ? (isMs ? "Disambungkan ke Supabase" : "Connected to Supabase")
+              : (isMs ? "Menggunakan data terakhir yang tersedia" : "Using the latest available data")}
+          </small>
+        </div>
+      </div>
+      <div className="live-proof-metric">
+        <strong>{formatMetric(onlineUsers)}</strong>
+        <span>{isMs ? "pelajar sedang online" : "students online now"}</span>
+      </div>
+      <div className="live-proof-metric">
+        <strong>{formatMetric(totalUsers)}</strong>
+        <span>{isMs ? "jumlah pelajar" : "all-time students"}</span>
+      </div>
+    </div>
+  );
+}
+
 
 const copy = {
   en: {
@@ -407,11 +634,18 @@ function App() {
   const smoothProgress = useSpring(scrollYProgress, { stiffness: 90, damping: 25, mass: 0.25 });
   const heroY = useTransform(scrollYProgress, [0, 0.12], [0, reduceMotion ? 0 : 180]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.09], [1, 0]);
+  const socialProof = useSupabaseSocialProof();
+  const activeReviews = useMemo<ReviewTuple[]>(
+    () => socialProof.liveReviews.length
+      ? socialProof.liveReviews.map((review) => [review.quote, review.author, review.tag])
+      : fallbackReviews,
+    [socialProof.liveReviews],
+  );
   const reviewRows = useMemo(() => {
-    const rows: string[][][] = [[], [], []];
-    reviews.forEach((review, index) => rows[index % 3].push(review));
+    const rows: ReviewTuple[][] = [[], [], []];
+    activeReviews.forEach((review, index) => rows[index % 3].push(review));
     return rows.map((row) => [...row, ...row]);
-  }, []);
+  }, [activeReviews]);
   const t = copy[lang];
 
   useMotionValueEvent(scrollYProgress, "change", (value) => setScrollPercent(Math.round(value * 100)));
@@ -737,6 +971,12 @@ function App() {
 
         <section className="reviews scene" id="reviews">
           <SceneHeading eyebrow={t.revEyebrow} title={t.revTitle} accent={t.revAccent} body={t.revBody} center />
+          <LiveProofBand
+            lang={lang}
+            onlineUsers={socialProof.onlineUsers}
+            totalUsers={socialProof.totalUsers}
+            reviewStatus={socialProof.reviewStatus}
+          />
           <div className="marquee-shell">
             <div className={`marquee-wall${reduceMotion ? " reduced" : ""}`}>
               {reviewRows.map((row, rowIndex) => (
@@ -753,7 +993,7 @@ function App() {
               ))}
             </div>
           </div>
-          <div className="review-summary"><span><strong>18</strong> real voices</span><i /><span><strong>1</strong> shared reaction</span><i /><span className="review-shout">GEMPAK.</span></div>
+          <div className="review-summary"><span><strong>{activeReviews.length}</strong> {socialProof.liveReviews.length ? (lang === "ms" ? "suara langsung" : "live voices") : (lang === "ms" ? "suara ujian" : "testing voices")}</span><i /><span><strong>1</strong> shared reaction</span><i /><span className="review-shout">GEMPAK.</span></div>
         </section>
 
         <section className="faq scene" id="faq">
