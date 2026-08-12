@@ -56,7 +56,7 @@ const reveal = {
   visible: { opacity: 1, y: 0 },
 };
 
-const fallbackReviews = [
+const fallbackReviews: ReviewTuple[] = [
   ["Senang kerja kita man, tolak satu jobscope 🖐🏽... sorry do syedi demand macam2 😅 sebab gempak wehhh", "Aliya Maisarah Tawe", "Efficiency & quality"],
   ["STYLEEE GILAAA WEIHHHH! I is amazeeeeddddd! AKU DAA EXCITED DARI TADI", "Ilyanie Tawe", "The wow factor"],
   ["OKEH BAPAK STYLEEEEEEEEEEE 😂", "Ilyanie Tawe", "Design & UI"],
@@ -644,7 +644,7 @@ function App() {
   const reviewRows = useMemo(() => {
     const rows: ReviewTuple[][] = [[], [], []];
     activeReviews.forEach((review, index) => rows[index % 3].push(review));
-    return rows.map((row) => [...row, ...row]);
+    return rows.map((row): ReviewTuple[] => [...row, ...row]);
   }, [activeReviews]);
   const t = copy[lang];
 
