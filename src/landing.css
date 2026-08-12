@@ -461,3 +461,90 @@ img { max-width: 100%; display: block; }
   background: var(--gold);
   color: var(--green);
 }
+
+
+/* =============================================
+   Live from TawePro — Supabase social proof
+   Compact metrics band above the review wall.
+   ============================================= */
+.live-proof-band {
+  width: min(1120px, 100%);
+  margin: 34px auto 0;
+  padding: 18px 22px;
+  display: grid;
+  grid-template-columns: minmax(230px, 1.4fr) minmax(150px, .8fr) minmax(150px, .8fr);
+  align-items: center;
+  gap: 18px;
+  border: 1px solid rgba(7, 29, 23, .14);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, .36);
+  box-shadow: 0 12px 40px rgba(7, 29, 23, .05);
+}
+.live-proof-intro {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+.live-proof-intro > div {
+  display: grid;
+  gap: 4px;
+}
+.live-proof-intro strong {
+  color: var(--green-2);
+  font: 800 10px "Manrope";
+  letter-spacing: .12em;
+}
+.live-proof-intro small {
+  color: rgba(7, 29, 23, .48);
+  font-size: 10px;
+}
+.live-signal {
+  width: 10px;
+  height: 10px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: rgba(7, 29, 23, .22);
+}
+.live-signal.is-live {
+  background: #5f9d45;
+  box-shadow: 0 0 0 5px rgba(95, 157, 69, .12);
+  animation: liveSignalPulse 2.2s ease-in-out infinite;
+}
+.live-proof-metric {
+  display: grid;
+  gap: 3px;
+  padding-left: 18px;
+  border-left: 1px solid rgba(7, 29, 23, .13);
+}
+.live-proof-metric strong {
+  color: var(--green);
+  font: 800 clamp(22px, 3vw, 34px) "Manrope";
+  letter-spacing: -.06em;
+}
+.live-proof-metric span {
+  color: rgba(7, 29, 23, .52);
+  font-size: 10px;
+}
+@keyframes liveSignalPulse {
+  0%, 100% { opacity: .62; transform: scale(.9); }
+  50% { opacity: 1; transform: scale(1.12); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .live-signal.is-live {
+    animation: none;
+  }
+}
+@media (max-width: 680px) {
+  .live-proof-band {
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    padding: 16px;
+  }
+  .live-proof-intro {
+    grid-column: 1 / -1;
+  }
+  .live-proof-metric {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
